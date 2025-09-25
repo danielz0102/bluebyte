@@ -1,14 +1,78 @@
-import './RegisterPage.css';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import "./RegisterPage.css";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import Alert from "../components/Alert/Alert";
 
 function RegisterPage() {
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    navigate('/home');
+
+    if (!validate()) return;
+
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+    formData.append("image", imageFile);
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3001/registrar",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      console.log({ data });
+
+      localStorage.setItem("userId", data.userId);
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+
+      if (err.status === 401) {
+        return setError(
+          "Credenciales inválidas. Por favor, verifica tu información."
+        );
+      }
+
+      if (err.status === 409) {
+        return setError("El nombre de usuario ya existe");
+      }
+
+      setError(
+        "Ha habido un error en el servidor. Inténtalo de nuevo más tarde."
+      );
+    }
+  };
+
+  const validate = () => {
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return false;
+    }
+
+    if (!username || !password) {
+      setError("El nombre de usuario y la contraseña son obligatorios");
+      return false;
+    }
+
+    if (!imageFile) {
+      setError("La foto de perfil es obligatoria");
+      return false;
+    }
+
+    setError("");
+    return true;
   };
 
   const handleImageChange = (e) => {
@@ -36,14 +100,30 @@ function RegisterPage() {
     >
       <div className="register-box">
         <div className="register-header">
-          <img src="/bluebyte-logo.png" alt="Bluebyte Logo" className="logo-img" />
+          <img
+            src="/bluebyte-logo.png"
+            alt="Bluebyte Logo"
+            className="logo-img"
+          />
           <h2>Únete a BlueByte</h2>
         </div>
+        {error && <Alert message={error} />}
         <form onSubmit={handleRegister}>
-          <input type="text" placeholder="Nombre de usuario" />
-          <input type="password" placeholder="Contraseña" />
-          <input type="password" placeholder="Confirmar contraseña" />
-
+          <input
+            type="text"
+            placeholder="Nombre de usuario"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <div className="profile-photo">
             <label>Foto de perfil</label>
             <label htmlFor="file-upload" className="photo-placeholder">
@@ -57,8 +137,11 @@ function RegisterPage() {
               id="file-upload"
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: 'none' }}
+              onChange={(e) => {
+                handleImageChange(e);
+                setImageFile(e.target.files[0]);
+              }}
+              style={{ display: "none" }}
             />
           </div>
 
