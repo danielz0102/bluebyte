@@ -1,0 +1,9 @@
+.Alert {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid red;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-radius: 5px;
+  text-align: center;
+}
