@@ -1,0 +1,109 @@
+.login-page {
+  background-color: #cce6ff; /* azul claro saturado */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.login-box {
+  background-color: white;
+  width: 100%;
+  max-width: 520px;
+  padding: 50px 60px;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.logo-img {
+  height: 90px;
+}
+
+.login-header h2 {
+  font-size: 1.6rem;
+  color: #0a2e4d;
+  margin: 0;
+}
+
+.login-header h2:focus {
+  outline: none;
+}
+
+form input {
+  width: 80%;
+  margin: 0 auto 15px;
+  display: block;
+  padding: 12px;
+  margin-bottom: 15px;
+  background-color: #e0f0ff; /* fondo azul claro */
+  border: 1px solid #b0d4f1;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #0a2e4d;
+  text-align: center
+}
+
+form input::placeholder {
+  color: #5a7fa3;
+}
+
+form button {
+  width: 30%;
+  padding: 12px;
+  background-color: #0a2e4d;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 20px auto 0;
+  display: block;
+}
+
+form button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+form button:hover {
+  background-color: #0077cc;
+}
+
+.register-btn {
+  background-color: #ffffff; /* fondo azul claro */
+  color: #0a2e4d;            /* texto azul oscuro */
+  border: 1px solid #ffffff; /* borde definido */
+  width: 30%;
+  padding: 12px;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 20px auto 0;
+  display: block;
+}
+
+.register-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.register-btn:hover {
+  background-color: #c0e0ff; /* tono más claro al pasar el mouse */
+}
