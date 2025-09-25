@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Alert from "../components/Alert/Alert";
+import { Link } from "react-router-dom";
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -144,6 +145,9 @@ function RegisterPage() {
           </div>
 
           <button type="submit">Registrarse</button>
+          <Link to="/" className="login-link">
+            Si ya tienes una cuenta, inicia sesión
+          </Link>
         </form>
       </div>
     </div>
