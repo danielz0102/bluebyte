@@ -68,10 +68,10 @@ app.post("/login", (req, res) => {
       return res.status(500).json({ message: "ErrBD" });
     }
 
-    if (result.length === 0) {
+    if (result[0].length === 0) {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
-    return res.json({ message: "Login exitoso", userId: result[0].id });
+    return res.json({ message: "Login exitoso", userId: result[0][0].id });
   });
 });

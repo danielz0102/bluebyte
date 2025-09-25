@@ -32,8 +32,6 @@ function RegisterPage() {
         }
       );
 
-      console.log({ data });
-
       localStorage.setItem("userId", data.userId);
       navigate("/home");
     } catch (err) {
@@ -112,17 +110,17 @@ function RegisterPage() {
           <input
             type="text"
             placeholder="Nombre de usuario"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value.trim())}
           />
           <input
             type="password"
             placeholder="Contraseña"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value.trim())}
           />
           <input
             type="password"
             placeholder="Confirmar contraseña"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value.trim())}
           />
           <div className="profile-photo">
             <label>Foto de perfil</label>
