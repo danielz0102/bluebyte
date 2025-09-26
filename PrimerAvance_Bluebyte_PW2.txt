@@ -1,0 +1,8 @@
+EQUIPO: BLUEBYTE
+  Daniel Zambrano González
+  Jazmin Paola Rodríguez Lara
+  Jesús Ivan Martínez Dávila
+  Bárbara Sophía Baños Terrones
+
+Repositorio:
+https://github.com/danielz0102/bluebyte.git
