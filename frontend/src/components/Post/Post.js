@@ -1,17 +1,18 @@
-import './Post.css';
-import { useState } from 'react';
+import "./Post.css";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Post() {
   const [comentarios, setComentarios] = useState([
-    '¡Me encantó este post!',
-    'Muy interesante, gracias por compartir.',
+    "¡Me encantó este post!",
+    "Muy interesante, gracias por compartir.",
   ]);
-  const [nuevoComentario, setNuevoComentario] = useState('');
+  const [nuevoComentario, setNuevoComentario] = useState("");
 
   const handleComentar = () => {
     if (nuevoComentario.trim()) {
       setComentarios([...comentarios, nuevoComentario]);
-      setNuevoComentario('');
+      setNuevoComentario("");
     }
   };
 
@@ -23,9 +24,12 @@ function Post() {
         <span className="post-date">Agosto 06, 2025</span>
       </div>
 
-      <h3 className="post-title">Título del Post</h3>
+      <h3 className="post-title">
+        <Link to="/post">Título del Post</Link>
+      </h3>
       <p className="post-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua...
       </p>
 
       <div className="post-image-container">
@@ -34,7 +38,11 @@ function Post() {
 
       <div className="post-actions">
         <div className="comments-count">
-          <img src="/icons/comment.png" alt="Comment icon" className="comment-icon" />
+          <img
+            src="/icons/comment.png"
+            alt="Comment icon"
+            className="comment-icon"
+          />
           <span>{comentarios.length} comentarios</span>
         </div>
       </div>
@@ -51,7 +59,9 @@ function Post() {
 
       <div className="comment-list">
         {comentarios.map((c, i) => (
-          <p key={i} className="comment-item">💬 {c}</p>
+          <p key={i} className="comment-item">
+            💬 {c}
+          </p>
         ))}
       </div>
     </div>
