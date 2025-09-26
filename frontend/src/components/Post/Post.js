@@ -33,10 +33,6 @@ function Post() {
       </div>
 
       <div className="post-actions">
-        <div className="likes">
-          <img src="/icons/like.png" alt="Like icon" className="like-icon" />
-          <span>20 likes</span>
-        </div>
         <div className="comments-count">
           <img src="/icons/comment.png" alt="Comment icon" className="comment-icon" />
           <span>{comentarios.length} comentarios</span>

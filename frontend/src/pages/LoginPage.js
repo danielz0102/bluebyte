@@ -5,6 +5,8 @@ import { useState } from "react";
 import Alert from "../components/Alert/Alert";
 
 function LoginPage() {
+  localStorage.removeItem("user");
+
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +23,7 @@ function LoginPage() {
         password,
       });
 
-      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/home");
     } catch (err) {
       console.log(err);

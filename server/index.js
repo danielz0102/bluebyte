@@ -53,7 +53,10 @@ app.post("/registrar", file.single("image"), (req, res) => {
 
       res.status(201).json({
         message: "Usuario registrado",
-        userId: userData.id,
+        user: {
+          id: userData.id,
+          username: userData.username,
+        },
       });
     }
   );
@@ -72,6 +75,14 @@ app.post("/login", (req, res) => {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
-    return res.json({ message: "Login exitoso", userId: result[0][0].id });
+    const userData = result[0][0];
+
+    return res.json({
+      message: "Login exitoso",
+      user: {
+        id: userData.id,
+        username: userData.username,
+      },
+    });
   });
 });

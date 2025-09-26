@@ -6,6 +6,8 @@ import Alert from "../components/Alert/Alert";
 import { Link } from "react-router-dom";
 
 function RegisterPage() {
+  localStorage.removeItem("user");
+
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState(null);
   const [username, setUsername] = useState("");
@@ -33,7 +35,7 @@ function RegisterPage() {
         }
       );
 
-      localStorage.setItem("userId", data.userId);
+      localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/home");
     } catch (err) {
       console.log(err);
