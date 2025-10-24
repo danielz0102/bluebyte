@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import MainLayout from "../../components/MainLayout/";
 import "./Categories.css";
 
@@ -36,6 +37,11 @@ function Categories() {
             <p>{cat.descripcion}</p>
           </div>
         ))}
+
+        {/* Tarjeta para agregar nueva categoría */}
+        <Link to="/categorias/crear" className="category-card add-category-card">
+          <div className="plus-icon">+</div>
+        </Link>
       </div>
     </MainLayout>
   );
