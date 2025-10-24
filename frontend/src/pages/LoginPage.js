@@ -4,8 +4,6 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Alert from "../components/Alert/Alert";
 
-const skipBackend = true; // Cambia a false cuando quieras volver a usar el backend
-
 function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -19,19 +17,13 @@ function LoginPage() {
 
     if (!validate()) return;
 
-    if (skipBackend) {
-      // Simula login exitoso sin backend
-      const fakeUser = { username, role: "user" };
-      localStorage.setItem("user", JSON.stringify(fakeUser));
-      navigate("/home");
-      return; // ← Este return es importante para evitar que siga al bloque real
-    }
-
     try {
       const { data } = await axios.post("http://localhost:3001/login", {
         username,
         password,
       });
+
+      console.log({ user: data.user });
 
       localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/home");
