@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./PostForm.css";
+import axios from "axios";
 
 export default function PostForm({ initialData = {}, onSubmit }) {
   const [title, setTitle] = useState(initialData.title || "");
   const [category, setCategory] = useState(initialData.category || "General");
+  const [categories, setCategories] = useState([]);
   const [content, setContent] = useState(initialData.content || "");
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(initialData.image || null);
@@ -19,8 +21,8 @@ export default function PostForm({ initialData = {}, onSubmit }) {
       title,
       category,
       content,
-      image: image ? `/images/posts/${image.name}` : previewUrl,
-      userId: user.id || "uuid-simulado",
+      image: image,
+      userId: user.id,
       publishedAt: new Date().toISOString(),
       isDraft: false,
       username: user.username,
@@ -28,6 +30,16 @@ export default function PostForm({ initialData = {}, onSubmit }) {
 
     onSubmit(postData);
   };
+
+  const getCategories = async () => {
+    const { data } = await axios.get("http://localhost:3001/categorias");
+
+    setCategories(data);
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   return (
     <form className="card form" onSubmit={handleSubmit}>
@@ -42,14 +54,12 @@ export default function PostForm({ initialData = {}, onSubmit }) {
 
       <div className="form-row">
         <label>Categoría</label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option>General</option>
-          <option>Anuncios</option>
-          <option>Tutoriales</option>
-          <option>Soporte</option>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.title}>
+              {cat.title}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -77,7 +87,11 @@ export default function PostForm({ initialData = {}, onSubmit }) {
         {image && <p>Seleccionado: {image.name}</p>}
         {previewUrl && (
           <div className="image-preview">
-            <img src={previewUrl} alt="Previsualización" className="preview-img" />
+            <img
+              src={previewUrl}
+              alt="Previsualización"
+              className="preview-img"
+            />
           </div>
         )}
       </div>
