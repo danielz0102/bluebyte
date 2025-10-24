@@ -98,6 +98,30 @@ app.get("/publicaciones", (req, res) => {
   });
 });
 
+app.get("/publicaciones/:id", (req, res) => {
+  const postId = req.params.id;
+
+  db.query(
+    `SELECT posts.*, users.username 
+     FROM posts 
+     INNER JOIN users ON posts.userId = users.id 
+     WHERE posts.id = ?`,
+    [postId],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({ message: "ErrBD" });
+      }
+
+      if (result.length === 0) {
+        return res.status(404).json({ message: "Publicación no encontrada" });
+      }
+
+      return res.json(result[0]);
+    }
+  );
+});
+
 app.post("/publicaciones", file.single("image"), (req, res) => {
   const { title, content, userId } = req.body;
   const image = req.file.buffer.toString("base64");
