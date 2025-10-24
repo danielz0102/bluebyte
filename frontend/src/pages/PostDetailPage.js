@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainLayout from "../components/MainLayout";
+import { useParams } from "react-router-dom";
 import "./PostDetailPage.css";
+import axios from "axios";
 
 const mockPost = {
   id: 1,
@@ -12,11 +14,30 @@ const mockPost = {
 };
 
 export default function PostDetailPage() {
+  const { id } = useParams();
   const [comments, setComments] = useState([
     { id: 1, user: "Ana", text: "¡Excelente publicación!" },
     { id: 2, user: "Luis", text: "Gracias por compartir." },
   ]);
+  const [post, setPost] = useState(null);
   const [text, setText] = useState("");
+
+  const getPost = async (postId) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3001/publicaciones/${postId}`
+      );
+
+      setPost(data);
+    } catch (err) {
+      console.error("Error al cargar la publicación:", err);
+      alert("Error al cargar la publicación");
+    }
+  };
+
+  useEffect(() => {
+    getPost(id);
+  }, [id]);
 
   const addComment = (e) => {
     e.preventDefault();
@@ -35,14 +56,19 @@ export default function PostDetailPage() {
           </div>
 
           <article className="card post-card">
-            <h2>{mockPost.title}</h2>
+            <h2>{post?.title ?? "Cargando..."}</h2>
             <div className="meta">
               <span>
-                por <b>{mockPost.author}</b>
+                por <b>{post?.username}</b>
               </span>
-              <span>{mockPost.date}</span>
+              <span>{new Date(post?.publishedAt).toLocaleDateString()}</span>
             </div>
-            <p className="content">{mockPost.content}</p>
+            <img
+              src={post?.image ? `data:image/jpeg;base64,${post.image}` : ""}
+              alt={post?.title}
+              style={{ maxWidth: "600px" }}
+            />
+            <p className="content">{post?.content}</p>
           </article>
 
           <section className="card comments-card">

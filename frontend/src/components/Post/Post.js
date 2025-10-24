@@ -10,41 +10,43 @@ function Post({ post }) {
 
   const postId = post.id;
 
- useEffect(() => {
-  const fetchComentarios = async () => {
-    // Si el post es simulado, agregamos comentarios simulados directamente
-    if (postId === 1 || postId === 2) {
-      // 👇 COMENTARIOS SIMULADOS TEMPORALES (BORRAR CUANDO BD esté lista)
-      setComentarios([
-        {
-          id: "mock1",
-          content: "¡Me encantó este post!",
-          createdAt: "2025-10-23T14:00:00",
-          username: "Ana",
-          image: "/images/users/ana.png",
-        },
-        {
-          id: "mock2",
-          content: "Gracias por compartir, muy útil.",
-          createdAt: "2025-10-23T15:30:00",
-          username: "Luis",
-          image: "/images/users/luis.png",
-        },
-      ]);
-      return;
-    }
+  useEffect(() => {
+    const fetchComentarios = async () => {
+      // Si el post es simulado, agregamos comentarios simulados directamente
+      if (postId === 1 || postId === 2) {
+        // 👇 COMENTARIOS SIMULADOS TEMPORALES (BORRAR CUANDO BD esté lista)
+        setComentarios([
+          {
+            id: "mock1",
+            content: "¡Me encantó este post!",
+            createdAt: "2025-10-23T14:00:00",
+            username: "Ana",
+            image: "/images/users/ana.png",
+          },
+          {
+            id: "mock2",
+            content: "Gracias por compartir, muy útil.",
+            createdAt: "2025-10-23T15:30:00",
+            username: "Luis",
+            image: "/images/users/luis.png",
+          },
+        ]);
+        return;
+      }
 
-    // Si el post viene de la BD, hacemos la petición real
-    try {
-      const { data } = await axios.get(`http://localhost:3001/comments?postId=${postId}`);
-      setComentarios(data);
-    } catch (err) {
-      console.error("Error al cargar comentarios:", err);
-    }
-  };
+      // Si el post viene de la BD, hacemos la petición real
+      try {
+        const { data } = await axios.get(
+          `http://localhost:3001/comments?postId=${postId}`
+        );
+        setComentarios(data);
+      } catch (err) {
+        console.error("Error al cargar comentarios:", err);
+      }
+    };
 
-  fetchComentarios();
-}, [postId]);
+    fetchComentarios();
+  }, [postId]);
 
   const handleComentar = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -78,7 +80,9 @@ function Post({ post }) {
       <div className="post-header">
         <span className="post-user">{post.username || "Usuario"}</span>
         <span className="post-category">Categoría: {post.category}</span>
-        <span className="post-date">{new Date(post.publishedAt).toLocaleDateString()}</span>
+        <span className="post-date">
+          {new Date(post.publishedAt).toLocaleDateString()}
+        </span>
       </div>
 
       <h3 className="post-title">
@@ -88,13 +92,21 @@ function Post({ post }) {
 
       {post.image && (
         <div className="post-image-container">
-          <img src={post.image} alt="Post visual" className="post-image" />
+          <img
+            src={`data:image/jpeg;base64,${post.image}`}
+            alt="Post visual"
+            className="post-image"
+          />
         </div>
       )}
 
       <div className="post-actions">
         <div className="comments-count">
-          <img src="/icons/comment.png" alt="Comment icon" className="comment-icon" />
+          <img
+            src="/icons/comment.png"
+            alt="Comment icon"
+            className="comment-icon"
+          />
           <span>{comentarios.length} comentarios</span>
         </div>
         <button onClick={toggleComentarios} className="toggle-comments-btn">
@@ -108,10 +120,18 @@ function Post({ post }) {
             {comentarios.map((c, i) => (
               <div key={i} className="comment-item">
                 <div className="comment-header">
-                  <img src={c.image} alt={c.username} className="comment-avatar" />
+                  <img
+                    src={c.image}
+                    alt={c.username}
+                    className="comment-avatar"
+                  />
                   <div>
-                    <p><strong>{c.username}</strong> comentó:</p>
-                    <p className="comment-date">{new Date(c.createdAt).toLocaleString()}</p>
+                    <p>
+                      <strong>{c.username}</strong> comentó:
+                    </p>
+                    <p className="comment-date">
+                      {new Date(c.createdAt).toLocaleString()}
+                    </p>
                   </div>
                 </div>
                 <p>{c.content}</p>
