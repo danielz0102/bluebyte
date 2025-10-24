@@ -86,3 +86,76 @@ app.post("/login", (req, res) => {
     });
   });
 });
+
+app.get("/publicaciones", (req, res) => {
+  db.query("CALL getLastestPosts()", (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ message: "ErrBD" });
+    }
+
+    return res.json(result[0]);
+  });
+});
+
+app.post("/publicaciones", file.single("image"), (req, res) => {
+  const { title, content, userId } = req.body;
+  const image = req.file.buffer.toString("base64");
+
+  db.query(
+    "CALL createPost(?,?,?,?)",
+    [title, content, image, userId],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+
+        if (err.sqlState === "45000") {
+          return res.status(409).json({ message: "El usuario no existe" });
+        }
+
+        return res.status(500).json({ message: "ErrBD" });
+      }
+
+      const postData = result[0][0];
+      res.status(201).json({ message: "Publicación creada", post: postData });
+    }
+  );
+});
+
+app.put("/publicaciones/:id", file.single("image"), (req, res) => {
+  const postId = req.params.id;
+  const { title, content } = req.body;
+  const image = req.file.buffer.toString("base64");
+
+  db.query(
+    "CALL updatePost(?,?,?,?,?)",
+    [postId, title, content, image],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+
+        if (err.sqlState === "45000") {
+          return res.status(404).json({ message: "La publicación no existe" });
+        }
+
+        return res.status(500).json({ message: "ErrBD" });
+      }
+
+      const postData = result[0][0];
+      res.json({ message: "Publicación actualizada", post: postData });
+    }
+  );
+});
+
+app.delete("/publicaciones/:id", (req, res) => {
+  const postId = req.params.id;
+
+  db.query("CALL deletePost(?)", [postId], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ message: "ErrBD" });
+    }
+
+    res.json({ message: "Publicación eliminada" });
+  });
+});
