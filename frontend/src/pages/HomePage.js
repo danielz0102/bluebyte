@@ -7,35 +7,22 @@ import "./HomePage.css";
 function HomePage() {
   const [posts, setPosts] = useState([]);
 
+  const getPosts = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3001/publicaciones");
+      setPosts(data);
+    } catch (err) {
+      console.error("Error al cargar publicaciones:", err);
+    }
+  };
+
   useEffect(() => {
-    // Simulación de publicaciones
-    const mockPosts = [
-      {
-        id: 1,
-        title: "Cómo usar React con estilo",
-        category: "Tutoriales",
-        content: "En este post te explico cómo combinar React con CSS moderno para lograr interfaces atractivas.",
-        image: "/images/science.png",
-        publishedAt: "2025-10-23T15:30:00",
-        username: "sofia",
-      },
-      {
-        id: 2,
-        title: "¡Nuevo diseño en Bluebyte!",
-        category: "Anuncios",
-        content: "Hemos actualizado el diseño de la plataforma para mejorar la experiencia de usuario. ¡Cuéntanos qué opinas!",
-        image: "/images/post.png",
-        publishedAt: "2025-10-22T10:15:00",
-        username: "luis",
-      },
-    ];
-
-    setPosts(mockPosts);
+    getPosts();
   }, []);
-
 
   return (
     <MainLayout>
+      {posts.length === 0 && <p>No hay publicaciones disponibles.</p>}
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
