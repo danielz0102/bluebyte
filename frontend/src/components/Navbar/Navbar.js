@@ -21,8 +21,11 @@ function Navbar() {
       </div>
 
       <div className="user-profile">
-        <img src="/default-avatar.png" alt="Usuario" className="profile-img" />
-        <span className="user-label">{user?.username || "Usuario"}</span>
+        <img
+          src={user?.image || "/default-avatar.png"}
+          alt={user?.username || "Usuario"}
+          className="profile-img"
+        />        <span className="user-label">{user?.username || "Usuario"}</span>
       </div>
     </header>
   );

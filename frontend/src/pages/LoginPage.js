@@ -1,44 +1,55 @@
 import "./LoginPage.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Alert from "../components/Alert/Alert";
 
-function LoginPage() {
-  localStorage.removeItem("user");
+const skipBackend = true; // Cambia a false cuando quieras volver a usar el backend
 
+function LoginPage() {
+  
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  useEffect(() => {
+    localStorage.removeItem("user");
+  }, []);
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validate()) return;
+  if (!validate()) return;
 
-    try {
-      const { data } = await axios.post("http://localhost:3001/login", {
-        username,
-        password,
-      });
+  if (skipBackend) {
+    // Simula login exitoso sin backend
+    const fakeUser = { username, role: "user" };
+    localStorage.setItem("user", JSON.stringify(fakeUser));
+    navigate("/home");
+    return; // ← Este return es importante para evitar que siga al bloque real
+  }
 
-      localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/home");
-    } catch (err) {
-      console.log(err);
+  try {
+    const { data } = await axios.post("http://localhost:3001/login", {
+      username,
+      password,
+    });
 
-      if (err.status === 401) {
-        return setError(
-          "Credenciales inválidas. Por favor, verifica tu información."
-        );
-      }
+    localStorage.setItem("user", JSON.stringify(data.user));
+    navigate("/home");
+  } catch (err) {
+    console.log(err);
 
-      setError(
-        "Ha habido un error en el servidor. Inténtalo de nuevo más tarde."
+    if (err.response?.status === 401) {
+      return setError(
+        "Credenciales inválidas. Por favor, verifica tu información."
       );
     }
-  };
+
+    setError(
+      "Ha habido un error en el servidor. Inténtalo de nuevo más tarde."
+    );
+  }
+};
 
   const validate = () => {
     if (!username || !password) {

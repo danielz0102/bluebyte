@@ -16,7 +16,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/categorias" element={<Categories />} />
         <Route path="/perfil" element={<ProfilePage />} />
-        <Route path="/post" element={<PostDetailPage />} />
+        <Route path="/post/:id" element={<PostDetailPage />} />        
         <Route path="/nuevo-post" element={<CreatePostPage />} />
       </Routes>
     </Router>

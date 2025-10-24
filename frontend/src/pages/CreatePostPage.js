@@ -1,18 +1,21 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
+import PostForm from "../components/PostForm/PostForm";
 import "./CreatePostPage.css";
+import axios from "axios";
 
 export default function CreatePostPage() {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("General");
-  const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Aquí luego conectan con su back: POST /api/posts
-    alert("Publicación creada (mock)!");
+  const handleCreate = async (postData) => {
+    try {
+      await axios.post("http://localhost:3001/posts", postData);
+      alert("Publicación creada con éxito!");
+      navigate("/home");
+    } catch (err) {
+      console.error("Error al publicar:", err);
+      alert("Error al crear la publicación. Intenta de nuevo.");
+    }
   };
 
   return (
@@ -22,59 +25,7 @@ export default function CreatePostPage() {
           <div className="page-header">
             <h1>Publicar</h1>
           </div>
-
-          <form className="card form" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <label>Título</label>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Escribe un título"
-              />
-            </div>
-
-            <div className="form-row">
-              <label>Categoría</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option>General</option>
-                <option>Anuncios</option>
-                <option>Tutoriales</option>
-                <option>Soporte</option>
-              </select>
-            </div>
-
-            <div className="form-row">
-              <label>Contenido</label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows="6"
-                placeholder="Escribe tu publicación..."
-              ></textarea>
-            </div>
-
-            <div className="form-row">
-              <label>Imagen (opcional)</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImage(e.target.files?.[0] || null)}
-              />
-              {image && <p>Seleccionado: {image.name}</p>}
-            </div>
-
-            <div className="form-actions">
-              <button className="btn btn-primary" type="submit">
-                Publicar
-              </button>
-              <Link to="/home" className="btn btn-secondary linklike">
-                Cancelar
-              </Link>
-            </div>
-          </form>
+          <PostForm onSubmit={handleCreate} />
         </div>
       </div>
     </MainLayout>
