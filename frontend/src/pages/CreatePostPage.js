@@ -12,9 +12,8 @@ export default function CreatePostPage() {
     formData.append("title", postData.title);
     formData.append("content", postData.content);
     formData.append("userId", postData.userId);
+    formData.append("categoryId", postData.category);
     formData.append("image", postData.image);
-
-    console.log({ image: postData.image });
 
     try {
       await axios.post("http://localhost:3001/publicaciones", formData, {

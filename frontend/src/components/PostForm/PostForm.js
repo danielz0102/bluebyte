@@ -35,6 +35,7 @@ export default function PostForm({ initialData = {}, onSubmit }) {
     const { data } = await axios.get("http://localhost:3001/categorias");
 
     setCategories(data);
+    setCategory(data[0].id);
   };
 
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function PostForm({ initialData = {}, onSubmit }) {
         <label>Categoría</label>
         <select value={category} onChange={(e) => setCategory(e.target.value)}>
           {categories.map((cat) => (
-            <option key={cat.id} value={cat.title}>
+            <option key={cat.id} value={cat.id}>
               {cat.title}
             </option>
           ))}

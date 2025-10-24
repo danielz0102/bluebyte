@@ -123,12 +123,13 @@ app.get("/publicaciones/:id", (req, res) => {
 });
 
 app.post("/publicaciones", file.single("image"), (req, res) => {
-  const { title, content, userId } = req.body;
+  const { title, content, userId, categoryId } = req.body;
+
   const image = req.file.buffer.toString("base64");
 
   db.query(
-    "CALL createPost(?,?,?,?)",
-    [title, content, image, userId],
+    "CALL createPost(?,?,?,?,?)",
+    [title, content, image, userId, categoryId],
     (err, result) => {
       if (err) {
         console.log(err);
