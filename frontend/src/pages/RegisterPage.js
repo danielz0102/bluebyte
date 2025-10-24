@@ -57,16 +57,32 @@ function RegisterPage() {
   };
 
   const validate = () => {
-    if (password !== confirmPassword) {
+    const user = (username || "").trim();
+    const pass = (password || "").trim();
+    const conf = (confirmPassword || "").trim();
+    const usernameRe = /^[a-zA-Z0-9_.-]{3,20}$/;
+    const passwordRe = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\S]{8,}$/;
+
+    if (!user || !pass || !conf) {
+      setError("Usuario y contraseñas son obligatorios");
+      return false;
+    }
+    if (!usernameRe.test(user)) {
+      setError(
+        "Usuario inválido: usa 3-20 caracteres alfanuméricos (._-), sin espacios."
+      );
+      return false;
+    }
+    if (!passwordRe.test(pass)) {
+      setError(
+        "Contraseña inválida: mínimo 8, al menos 1 número y 1 carácter especial, sin espacios."
+      );
+      return false;
+    }
+    if (pass !== conf) {
       setError("Las contraseñas no coinciden");
       return false;
     }
-
-    if (!username || !password) {
-      setError("El nombre de usuario y la contraseña son obligatorios");
-      return false;
-    }
-
     if (!imageFile) {
       setError("La foto de perfil es obligatoria");
       return false;

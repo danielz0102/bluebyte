@@ -7,6 +7,7 @@ import ProfilePage from "./pages/ProfilePage";
 import PostDetailPage from "./pages/PostDetailPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import CategoriesPage from "./pages/CategoriesPage";
+import OptionsPage from "./pages/OptionsPage";
 
 function App() {
   return (
@@ -17,9 +18,10 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/categorias" element={<Categories />} />
         <Route path="/perfil" element={<ProfilePage />} />
-        <Route path="/post/:id" element={<PostDetailPage />} />        
+        <Route path="/post/:id" element={<PostDetailPage />} />
         <Route path="/nuevo-post" element={<CreatePostPage />} />
         <Route path="/categorias/crear" element={<CategoriesPage />} />
+        <Route path="/opciones" element={<OptionsPage />} />
       </Routes>
     </Router>
   );
