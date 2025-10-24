@@ -17,3 +17,15 @@
 .btn-primary { background:#1e40af; color:#fff; }
 .btn-secondary { background:#f1f5f9; color:#0f172a; border:1px solid #e2e8f0; }
 .linklike { text-decoration: none; display:inline-block; }
+
+.image-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

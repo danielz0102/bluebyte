@@ -85,3 +85,74 @@
   object-fit: cover; /* recorta sin deformar */
   border-radius: 12px;
 }
+
+.comment-date {
+  font-size: 0.8rem;
+  color: #5a7fa3;
+  margin-top: 4px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0077cc;
+}
+
+.toggle-comments-btn {
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-comments-btn:hover {
+  background-color: #005fa3;
+}
+
+.comment-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 12px;
+}
+
+.comment-scroll {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0077cc;
+}
+
+.comment-date {
+  font-size: 0.8rem;
+  color: #5a7fa3;
+  margin-top: 4px;
+}
