@@ -3,6 +3,8 @@ import MainLayout from "../components/MainLayout/";
 import { usePosts } from "../hooks/usePosts";
 import { useParams } from "react-router-dom";
 import Post from "../components/Post/Post";
+import { useState } from "react";
+import { ChevronRight, ChevronDown } from "lucide-react";
 
 export default function ProfilePage() {
   return (
@@ -62,17 +64,22 @@ export default function ProfilePage() {
 
 function UserPosts() {
   const { id } = useParams();
+  const [showPosts, setShowPosts] = useState(false);
   const posts = usePosts({ userId: id });
 
   return (
-    <section style={{ marginTop: "32px" }}>
-      <h2>Mis Publicaciones</h2>
-      <main>
-        {posts.length === 0 && <p>No has creado ninguna publicación aún.</p>}
-        {posts.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
-      </main>
+    <section className="ProfilePage-user-posts">
+      <h2 onClick={() => setShowPosts((prev) => !prev)}>
+        Mis Publicaciones {showPosts ? <ChevronDown /> : <ChevronRight />}
+      </h2>
+      {showPosts && (
+        <main>
+          {posts.length === 0 && <p>No has creado ninguna publicación aún.</p>}
+          {posts.map((post) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </main>
+      )}
     </section>
   );
 }

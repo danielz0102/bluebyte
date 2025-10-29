@@ -44,7 +44,7 @@ function Sidebar() {
 
       <div className="menu-item">
         <button
-          className={location.pathname === "/perfil" ? "active" : ""}
+          className={location.pathname === `/perfil/${user.id}` ? "active" : ""}
           onClick={() => navigate(`/perfil/${user.id}`)}
         >
           <img src="/icons/profile.png" alt="Perfil" className="menu-icon" />

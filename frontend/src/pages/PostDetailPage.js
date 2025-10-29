@@ -4,15 +4,6 @@ import { useParams } from "react-router-dom";
 import "./PostDetailPage.css";
 import axios from "axios";
 
-const mockPost = {
-  id: 1,
-  title: "Primer Post de ejemplo",
-  author: "Usuario",
-  date: "2025-09-20",
-  content:
-    "Este es un contenido de ejemplo para la pantalla de Publicaciones y comentarios. Aquí podrán ver el post y comentar.",
-};
-
 export default function PostDetailPage() {
   const { id } = useParams();
   const [comments, setComments] = useState([
