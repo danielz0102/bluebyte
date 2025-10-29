@@ -222,18 +222,20 @@ export default function CategoriesPage() {
                         ) : (
                           <>
                             {c.description}
-                            <button
-                              className="btn btn-edit"
-                              onClick={() => startEditing(c)}
-                            >
-                              Editar
-                            </button>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() => removeCategory(c.id)}
-                            >
-                              Eliminar
-                            </button>
+                            <div className="cat-actions">
+                              <button
+                                className="btn btn-edit"
+                                onClick={() => startEditing(c)}
+                              >
+                                Editar
+                              </button>
+                              <button
+                                className="btn btn-danger"
+                                onClick={() => removeCategory(c.id)}
+                              >
+                                Eliminar
+                              </button>
+                            </div>
                           </>
                         )}
                       </span>
