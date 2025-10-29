@@ -1,5 +1,8 @@
-import MainLayout from "../components/MainLayout/";
 import "./ProfilePage.css";
+import MainLayout from "../components/MainLayout/";
+import { usePosts } from "../hooks/usePosts";
+import { useParams } from "react-router-dom";
+import Post from "../components/Post/Post";
 
 export default function ProfilePage() {
   return (
@@ -50,8 +53,26 @@ export default function ProfilePage() {
               </form>
             </div>
           </section>
+          <UserPosts />
         </div>
       </div>
     </MainLayout>
+  );
+}
+
+function UserPosts() {
+  const { id } = useParams();
+  const posts = usePosts({ userId: id });
+
+  return (
+    <section style={{ marginTop: "32px" }}>
+      <h2>Mis Publicaciones</h2>
+      <main>
+        {posts.length === 0 && <p>No has creado ninguna publicación aún.</p>}
+        {posts.map((post) => (
+          <Post key={post.id} post={post} />
+        ))}
+      </main>
+    </section>
   );
 }

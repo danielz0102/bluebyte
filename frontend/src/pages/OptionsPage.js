@@ -10,12 +10,10 @@ export default function OptionsPage() {
     navigate("/");
   };
 
-  const handleMyPosts = () => {
-    navigate("/perfil");
-  };
-
   const handleDeleteAccount = () => {
-    const ok = window.confirm("¿Seguro que deseas borrar tu cuenta? (Acción de backend pendiente)");
+    const ok = window.confirm(
+      "¿Seguro que deseas borrar tu cuenta? (Acción de backend pendiente)"
+    );
     if (ok) {
       alert("Tu solicitud de borrado se registró (simulada).");
       navigate("/");
@@ -31,9 +29,6 @@ export default function OptionsPage() {
 
         <section className="card">
           <div className="options-list">
-            <button className="btn btn-primary" onClick={handleMyPosts}>
-              Ver mis publicaciones
-            </button>
             <button className="btn btn-secondary" onClick={handleLogout}>
               Cerrar sesión
             </button>

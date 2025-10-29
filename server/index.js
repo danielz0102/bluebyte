@@ -88,14 +88,22 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/publicaciones", (req, res) => {
-  db.query("CALL getLastestPosts()", (err, result) => {
+  const { userId } = req.query;
+
+  const resultHandler = (err, result) => {
     if (err) {
       console.log(err);
       return res.status(500).json({ message: "ErrBD" });
     }
 
     return res.json(result[0]);
-  });
+  };
+
+  if (!userId) {
+    db.query("CALL getLastestPosts()", resultHandler);
+  } else {
+    db.query("CALL getPostsByUser(?)", [userId], resultHandler);
+  }
 });
 
 app.get("/publicaciones/:id", (req, res) => {

@@ -17,7 +17,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/categorias" element={<Categories />} />
-        <Route path="/perfil" element={<ProfilePage />} />
+        <Route path="/perfil/:id" element={<ProfilePage />} />
         <Route path="/post/:id" element={<PostDetailPage />} />
         <Route path="/nuevo-post" element={<CreatePostPage />} />
         <Route path="/categorias/crear" element={<CategoriesPage />} />
