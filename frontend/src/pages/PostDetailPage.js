@@ -3,13 +3,12 @@ import MainLayout from "../components/MainLayout";
 import { useParams } from "react-router-dom";
 import "./PostDetailPage.css";
 import axios from "axios";
+import { useComments } from "../hooks/useComments";
 
 export default function PostDetailPage() {
   const { id } = useParams();
-  const [comments, setComments] = useState([
-    { id: 1, user: "Ana", text: "¡Excelente publicación!" },
-    { id: 2, user: "Luis", text: "Gracias por compartir." },
-  ]);
+  const { comments, postComment } = useComments(id);
+
   const [post, setPost] = useState(null);
   const [text, setText] = useState("");
 
@@ -34,8 +33,8 @@ export default function PostDetailPage() {
     e.preventDefault();
     const t = text.trim();
     if (!t) return;
-    setComments([...comments, { id: Date.now(), user: "Tú", text: t }]);
     setText("");
+    postComment(t);
   };
 
   return (
@@ -67,7 +66,7 @@ export default function PostDetailPage() {
             <ul className="comment-list">
               {comments.map((c) => (
                 <li key={c.id}>
-                  <b>{c.user}:</b> <span>{c.text}</span>
+                  <b>{c.username}:</b> <span>{c.content}</span>
                 </li>
               ))}
             </ul>

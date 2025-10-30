@@ -1,48 +1,16 @@
-import "./Post.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { useComments } from "../../hooks/useComments";
+import "./Post.css";
 
 function Post({ post }) {
-  const [comentarios, setComentarios] = useState([]);
+  const { comments, postComment } = useComments(post.id);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [mostrarComentarios, setMostrarComentarios] = useState(false);
 
-  const postId = post.id;
-
-  const fetchComentarios = async () => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3001/comments?postId=${postId}`
-      );
-      setComentarios(data);
-    } catch (err) {
-      console.error("Error al cargar comentarios:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchComentarios();
-  }, [postId]);
-
   const handleComentar = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (nuevoComentario.trim() && user) {
-      const nuevo = {
-        content: nuevoComentario,
-        postId: postId,
-        userId: user.id,
-      };
-
-      try {
-        await axios.post("http://localhost:3001/comments", nuevo);
-        fetchComentarios();
-        setNuevoComentario("");
-      } catch (err) {
-        console.error("Error al enviar comentario:", err);
-      }
-    }
+    setNuevoComentario("");
+    await postComment(nuevoComentario);
   };
 
   const toggleComentarios = () => {
@@ -81,7 +49,7 @@ function Post({ post }) {
             alt="Comment icon"
             className="comment-icon"
           />
-          <span>{comentarios.length} comentarios</span>
+          <span>{comments.length} comentarios</span>
         </div>
         <button onClick={toggleComentarios} className="toggle-comments-btn">
           {mostrarComentarios ? "Ocultar comentarios" : "Ver comentarios"}
@@ -91,7 +59,7 @@ function Post({ post }) {
       {mostrarComentarios && (
         <div className="comment-card">
           <div className="comment-scroll">
-            {comentarios.map((c, i) => (
+            {comments.map((c, i) => (
               <div key={i} className="comment-item">
                 <div className="comment-header">
                   <img
