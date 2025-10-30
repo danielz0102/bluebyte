@@ -274,18 +274,14 @@ app.get("/comments", (req, res) => {
     return res.status(400).json({ message: "postId faltante" });
   }
 
-  db.query(
-    "SELECT * FROM comments WHERE postId = ? ORDER BY createdAt DESC",
-    [postId],
-    (err, results) => {
-      if (err) {
-        console.error("Error al cargar comentarios:", err);
-        return res.status(500).json({ message: "Error en la base de datos" });
-      }
-
-      res.json(results);
+  db.query("CALL getComments(?)", [postId], (err, results) => {
+    if (err) {
+      console.error("Error al cargar comentarios:", err);
+      return res.status(500).json({ message: "Error en la base de datos" });
     }
-  );
+
+    res.json(results[0]);
+  });
 });
 
 app.post("/comments", (req, res) => {

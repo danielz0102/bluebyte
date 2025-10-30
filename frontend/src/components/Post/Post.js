@@ -95,7 +95,7 @@ function Post({ post }) {
               <div key={i} className="comment-item">
                 <div className="comment-header">
                   <img
-                    src={c.image}
+                    src={`data:image/jpeg;base64,${c.image}`}
                     alt={c.username}
                     className="comment-avatar"
                   />
