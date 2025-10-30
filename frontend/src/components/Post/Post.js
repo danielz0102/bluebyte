@@ -12,29 +12,6 @@ function Post({ post }) {
 
   useEffect(() => {
     const fetchComentarios = async () => {
-      // Si el post es simulado, agregamos comentarios simulados directamente
-      if (postId === 1 || postId === 2) {
-        // 👇 COMENTARIOS SIMULADOS TEMPORALES (BORRAR CUANDO BD esté lista)
-        setComentarios([
-          {
-            id: "mock1",
-            content: "¡Me encantó este post!",
-            createdAt: "2025-10-23T14:00:00",
-            username: "Ana",
-            image: "/images/users/ana.png",
-          },
-          {
-            id: "mock2",
-            content: "Gracias por compartir, muy útil.",
-            createdAt: "2025-10-23T15:30:00",
-            username: "Luis",
-            image: "/images/users/luis.png",
-          },
-        ]);
-        return;
-      }
-
-      // Si el post viene de la BD, hacemos la petición real
       try {
         const { data } = await axios.get(
           `http://localhost:3001/comments?postId=${postId}`
@@ -54,11 +31,8 @@ function Post({ post }) {
     if (nuevoComentario.trim() && user) {
       const nuevo = {
         content: nuevoComentario,
-        createdAt: new Date().toISOString(),
-        username: user.username,
-        image: user.image || "/images/users/default.png",
         postId: postId,
-        userId: user.id || "uuid-simulado",
+        userId: user.id,
       };
 
       try {

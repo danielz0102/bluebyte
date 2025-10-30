@@ -266,3 +266,43 @@ app.delete("/eliminar_categoria/:id", (req, res) => {
     res.json({ message: "Categoría eliminada" });
   });
 });
+
+app.get("/comments", (req, res) => {
+  const { postId } = req.query;
+
+  if (!postId) {
+    return res.status(400).json({ message: "postId faltante" });
+  }
+
+  db.query(
+    "SELECT * FROM comments WHERE postId = ? ORDER BY createdAt DESC",
+    [postId],
+    (err, results) => {
+      if (err) {
+        console.error("Error al cargar comentarios:", err);
+        return res.status(500).json({ message: "Error en la base de datos" });
+      }
+
+      res.json(results);
+    }
+  );
+});
+
+app.post("/comments", (req, res) => {
+  const { content, postId, userId } = req.body;
+
+  db.query(
+    "INSERT INTO comments (content, postId, userId) VALUES (?,?,?)",
+    [content, postId, userId],
+    (err, result) => {
+      if (err) {
+        console.error("Error al insertar comentario:", err);
+        return res.status(500).json({ message: "Error en la base de datos" });
+      }
+
+      res
+        .status(201)
+        .json({ message: "Comentario agregado", commentId: result.insertId });
+    }
+  );
+});
