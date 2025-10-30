@@ -84,7 +84,8 @@ CREATE VIEW posts_vw AS SELECT
 		LIMIT 1
 	) AS category
 FROM posts p
-JOIN users u ON p.userId = u.id;
+JOIN users u ON p.userId = u.id
+ORDER BY COALESCE(p.updatedAt, p.publishedAt) DESC;
 
 -- STORED PROCEDURES
 
@@ -121,31 +122,13 @@ END //
 CREATE PROCEDURE getLastestPosts()
 BEGIN
 	SELECT * FROM posts_vw
-	ORDER BY COALESCE(updatedAt, publishedAt) DESC
 	LIMIT 10;
 END //
 
 CREATE PROCEDURE getPostsByUser(IN p_userId INT)
 BEGIN
-	SELECT 
-        p.id,
-        p.title,
-        p.content,
-        p.isDraft,
-        p.publishedAt,
-        p.updatedAt,
-        p.image,
-        p.userId,
-        (
-            SELECT c.title 
-            FROM posts_categories pc
-            JOIN categories c ON c.id = pc.categoryId
-            WHERE pc.postId = p.id
-            LIMIT 1
-        ) AS category
-    FROM posts p
-    WHERE p.userId = p_userId
-    ORDER BY COALESCE(p.updatedAt, p.publishedAt) DESC;
+	SELECT * FROM posts_vw
+    WHERE userId = p_userId;
 END //
 
 CREATE PROCEDURE createPost(

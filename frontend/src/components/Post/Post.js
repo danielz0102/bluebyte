@@ -10,18 +10,18 @@ function Post({ post }) {
 
   const postId = post.id;
 
-  useEffect(() => {
-    const fetchComentarios = async () => {
-      try {
-        const { data } = await axios.get(
-          `http://localhost:3001/comments?postId=${postId}`
-        );
-        setComentarios(data);
-      } catch (err) {
-        console.error("Error al cargar comentarios:", err);
-      }
-    };
+  const fetchComentarios = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3001/comments?postId=${postId}`
+      );
+      setComentarios(data);
+    } catch (err) {
+      console.error("Error al cargar comentarios:", err);
+    }
+  };
 
+  useEffect(() => {
     fetchComentarios();
   }, [postId]);
 
@@ -37,7 +37,7 @@ function Post({ post }) {
 
       try {
         await axios.post("http://localhost:3001/comments", nuevo);
-        setComentarios([...comentarios, nuevo]);
+        fetchComentarios();
         setNuevoComentario("");
       } catch (err) {
         console.error("Error al enviar comentario:", err);
