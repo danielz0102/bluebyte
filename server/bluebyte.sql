@@ -4,8 +4,10 @@ USE bluebyte;
 
 CREATE TABLE users(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(50) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    bio TEXT,
     image LONGTEXT NOT NULL
 );
 
@@ -104,15 +106,16 @@ END //
 CREATE PROCEDURE registerUser(
     IN p_username VARCHAR(50),
     IN p_password VARCHAR(50),
+    IN p_email VARCHAR(255),
     IN p_image LONGTEXT
 )
 BEGIN
-    IF EXISTS (SELECT 1 FROM users WHERE username = p_username) THEN
+    IF EXISTS (SELECT 1 FROM users WHERE username = p_username OR email = p_email) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Username already exists';
+            SET MESSAGE_TEXT = 'User already already exists';
     ELSE
-        INSERT INTO users(username, password, image)
-        VALUES(p_username, p_password, p_image);
+        INSERT INTO users(username, password, email, image)
+        VALUES(p_username, p_password, p_email, p_image);
 
         SELECT id, username, image FROM users 
         WHERE id = LAST_INSERT_ID();

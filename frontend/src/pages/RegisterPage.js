@@ -12,6 +12,7 @@ function RegisterPage() {
   const [profileImage, setProfileImage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,6 +25,7 @@ function RegisterPage() {
     const formData = new FormData();
     formData.append("username", username);
     formData.append("password", password);
+    formData.append("email", email);
     formData.append("image", imageFile);
 
     try {
@@ -62,9 +64,10 @@ function RegisterPage() {
     const conf = (confirmPassword || "").trim();
     const usernameRe = /^[a-zA-Z0-9_.-]{3,20}$/;
     const passwordRe = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\S]{8,}$/;
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!user || !pass || !conf) {
-      setError("Usuario y contraseñas son obligatorios");
+    if (!user || !pass || !conf || !email) {
+      setError("Usuario, contraseñas y correo electrónico son obligatorios");
       return false;
     }
     if (!usernameRe.test(user)) {
@@ -85,6 +88,11 @@ function RegisterPage() {
     }
     if (!imageFile) {
       setError("La foto de perfil es obligatoria");
+      return false;
+    }
+
+    if (email && !emailRe.test(email)) {
+      setError("Correo electrónico inválido");
       return false;
     }
 
@@ -130,6 +138,11 @@ function RegisterPage() {
             type="text"
             placeholder="Nombre de usuario"
             onChange={(e) => setUsername(e.target.value.trim())}
+          />
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            onChange={(e) => setEmail(e.target.value.trim())}
           />
           <input
             type="password"

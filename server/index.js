@@ -33,12 +33,12 @@ const file = multer({
 });
 
 app.post("/registrar", file.single("image"), (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
   const imagen = req.file.buffer.toString("base64");
 
   db.query(
-    "CALL registerUser(?,?,?)",
-    [username, password, imagen],
+    "CALL registerUser(?,?,?,?)",
+    [username, password, email, imagen],
     (err, result) => {
       if (err) {
         console.log(err);
