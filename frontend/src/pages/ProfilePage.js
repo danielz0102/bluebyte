@@ -7,6 +7,13 @@ import { useState } from "react";
 import { ChevronRight, ChevronDown } from "lucide-react";
 
 export default function ProfilePage() {
+  const [enabled, setEnabled] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  const handleEdit = () => {
+    setEnabled(false);
+  };
+
   return (
     <MainLayout>
       <div className="page profile-page">
@@ -18,11 +25,13 @@ export default function ProfilePage() {
             <div className="profile-grid">
               <div className="avatar-column">
                 <img
-                  src="/default-avatar.png"
+                  src={`data:image/jpg;base64,${user.image}`}
                   alt="Avatar"
                   className="avatar-lg"
                 />
-                <button className="btn btn-secondary">Cambiar foto</button>
+                {enabled && (
+                  <button className="btn btn-secondary">Cambiar foto</button>
+                )}
               </div>
               <form
                 className="form-column"
@@ -30,26 +39,52 @@ export default function ProfilePage() {
               >
                 <div className="form-row">
                   <label>Nombre</label>
-                  <input type="text" placeholder="Tu nombre" />
+                  <input
+                    type="text"
+                    placeholder="Tu nombre"
+                    disabled={!enabled}
+                    defaultValue={user.fullname}
+                  />
                 </div>
                 <div className="form-row">
                   <label>Usuario</label>
-                  <input type="text" placeholder="usuario123" />
+                  <input
+                    type="text"
+                    placeholder="usuario123"
+                    disabled={!enabled}
+                    defaultValue={user.username}
+                  />
                 </div>
                 <div className="form-row">
                   <label>Correo</label>
-                  <input type="email" placeholder="correo@ejemplo.com" />
+                  <input
+                    type="email"
+                    placeholder="correo@ejemplo.com"
+                    disabled={!enabled}
+                    defaultValue={user.email}
+                  />
                 </div>
                 <div className="form-row">
                   <label>Bio</label>
                   <textarea
                     placeholder="Cuéntanos sobre ti..."
                     rows="3"
+                    disabled={!enabled}
                   ></textarea>
                 </div>
                 <div className="form-actions">
-                  <button className="btn btn-primary" type="submit">
-                    Guardar cambios
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    onClick={() => {
+                      if (enabled) {
+                        return handleEdit();
+                      }
+
+                      setEnabled(true);
+                    }}
+                  >
+                    {enabled ? "Guardar cambios" : "Editar perfil"}
                   </button>
                 </div>
               </form>

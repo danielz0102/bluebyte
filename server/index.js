@@ -53,10 +53,7 @@ app.post("/registrar", file.single("image"), (req, res) => {
 
       res.status(201).json({
         message: "Usuario registrado",
-        user: {
-          id: userData.id,
-          username: userData.username,
-        },
+        user: userData,
       });
     }
   );
@@ -79,10 +76,7 @@ app.post("/login", (req, res) => {
 
     return res.json({
       message: "Login exitoso",
-      user: {
-        id: userData.id,
-        username: userData.username,
-      },
+      user: userData,
     });
   });
 });
