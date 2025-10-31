@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 export function usePosts({ userId } = {}) {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const queryParams = new URLSearchParams();
 
   if (userId) {
@@ -17,6 +18,8 @@ export function usePosts({ userId } = {}) {
       setPosts(data);
     } catch (err) {
       console.error("Error al cargar publicaciones:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -25,5 +28,5 @@ export function usePosts({ userId } = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return posts;
+  return { posts, loading };
 }

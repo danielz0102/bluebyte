@@ -65,7 +65,7 @@ export default function ProfilePage() {
 function UserPosts() {
   const { id } = useParams();
   const [showPosts, setShowPosts] = useState(false);
-  const posts = usePosts({ userId: id });
+  const { posts } = usePosts({ userId: id });
 
   return (
     <section className="ProfilePage-user-posts">

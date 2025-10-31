@@ -4,11 +4,14 @@ import { usePosts } from "../hooks/usePosts";
 import "./HomePage.css";
 
 function HomePage() {
-  const posts = usePosts();
+  const { posts, loading } = usePosts();
 
   return (
     <MainLayout>
-      {posts.length === 0 && <p>No hay publicaciones disponibles.</p>}
+      {loading && <p>Cargando publicaciones...</p>}
+      {!loading && posts.length === 0 && (
+        <p>No hay publicaciones disponibles.</p>
+      )}
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
