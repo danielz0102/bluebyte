@@ -296,3 +296,27 @@ app.post("/comments", (req, res) => {
     }
   );
 });
+
+app.put("/usuarios/:id", file.single("image"), (req, res) => {
+  const userId = req.params.id;
+  const { fullname, username, email, bio } = req.body;
+  const image = req.file ? req.file.buffer.toString("base64") : null;
+
+  db.query(
+    "CALL updateUser(?,?,?,?,?,?)",
+    [userId, fullname, username, email, bio, image],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        if (err.sqlState === "45000") {
+          return res.status(409).json({ message: "Username already exists" });
+        }
+        return res.status(500).json({ message: "Error en DB" });
+      }
+
+      res
+        .status(200)
+        .json({ message: "Usuario actualizado", user: result[0][0] });
+    }
+  );
+});

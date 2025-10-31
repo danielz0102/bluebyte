@@ -4,9 +4,10 @@ USE bluebyte;
 
 CREATE TABLE users(
 	id INT AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(100),
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(50) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(255) NOT NULL,
     bio TEXT,
     image LONGTEXT NOT NULL
 );
@@ -98,7 +99,7 @@ CREATE PROCEDURE login(
     IN p_password VARCHAR(50)
 )
 BEGIN
-	SELECT id, username, image FROM users 
+	SELECT id, username, image, email, fullname, bio FROM users 
     WHERE username = p_username AND password = p_password
     LIMIT 1;
 END //
@@ -110,14 +111,14 @@ CREATE PROCEDURE registerUser(
     IN p_image LONGTEXT
 )
 BEGIN
-    IF EXISTS (SELECT 1 FROM users WHERE username = p_username OR email = p_email) THEN
+    IF EXISTS (SELECT 1 FROM users WHERE username = p_username) THEN
         SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'User already already exists';
+            SET MESSAGE_TEXT = 'Username already already exists';
     ELSE
         INSERT INTO users(username, password, email, image)
         VALUES(p_username, p_password, p_email, p_image);
 
-        SELECT id, username, image FROM users 
+        SELECT id, username, image, email, fullname, bio FROM users 
         WHERE id = LAST_INSERT_ID();
     END IF;
 END //
@@ -235,6 +236,39 @@ BEGIN
     JOIN posts p ON p.id = c.postId
     WHERE c.postId = p_postId
     ORDER BY c.createdAt DESC;
+END //
+
+CREATE PROCEDURE updateUser(
+	IN p_id INT,
+    IN p_fullname VARCHAR(100),
+    IN p_username VARCHAR(50),
+    IN p_email VARCHAR(255),
+    IN p_bio TEXT,
+    IN p_image LONGTEXT
+)
+BEGIN
+	IF EXISTS (
+		SELECT 1 FROM users 
+		WHERE id != p_id
+        AND username = p_username
+	) THEN
+		SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Username already exists';
+	END IF;
+    
+	UPDATE users SET
+		fullname = p_fullname,
+		username = p_username,
+		email = p_email,
+		bio = p_bio,
+		image = CASE 
+					WHEN p_image IS NOT NULL AND p_image != '' THEN p_image
+					ELSE image
+				END
+	WHERE id = p_id;
+	
+	SELECT id, username, image, email, fullname, bio 
+	FROM users WHERE id = p_id;
 END //
 
 DELIMITER ;
