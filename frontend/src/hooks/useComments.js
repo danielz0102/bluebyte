@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export function useComments(postId) {
   const [comments, setComments] = useState([]);
 
-  const fetchComments = async () => {
+  const fetchComments = async (postId) => {
     try {
       const { data } = await axios.get(
         `http://localhost:3001/comments?postId=${postId}`
@@ -35,8 +35,8 @@ export function useComments(postId) {
   };
 
   useEffect(() => {
-    fetchComments();
-  }, []);
+    fetchComments(postId);
+  }, [postId]);
 
   return { comments, postComment };
 }
