@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./PostForm.css";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ export default function PostForm({ initialData = {}, onSubmit }) {
   const [content, setContent] = useState(initialData.content || "");
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(initialData.image || null);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,6 +34,12 @@ export default function PostForm({ initialData = {}, onSubmit }) {
 
   const getCategories = async () => {
     const { data } = await axios.get("http://localhost:3001/categorias");
+
+    if (data.length === 0) {
+      alert("No hay categorías disponibles. Crea una categoría primero.");
+      navigate("/categorias/crear");
+      return;
+    }
 
     setCategories(data);
     setCategory(data[0].id);
