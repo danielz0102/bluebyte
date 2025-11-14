@@ -82,7 +82,7 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/publicaciones", (req, res) => {
-  const { userId } = req.query;
+  const { userId, title } = req.query;
 
   const resultHandler = (err, result) => {
     if (err) {
@@ -93,10 +93,12 @@ app.get("/publicaciones", (req, res) => {
     return res.json(result[0]);
   };
 
-  if (!userId) {
-    db.query("CALL getLastestPosts()", resultHandler);
-  } else {
+  if (userId) {
     db.query("CALL getPostsByUser(?)", [userId], resultHandler);
+  } else if (title) {
+    db.query("CALL getPostsByTitle(?)", [title], resultHandler);
+  } else {
+    db.query("CALL getLastestPosts()", resultHandler);
   }
 });
 

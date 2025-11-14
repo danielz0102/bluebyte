@@ -22,18 +22,6 @@
   justify-content: center;
 }
 
-.search-bar {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px 70px;
-  border-radius: 30px;
-  border: 1px solid #b0d4f1;
-  background-color: #e0f0ff;
-  font-family: inherit;
-  font-size: 1rem;
-  color: #0a2e4d;
-}
-
 .search-bar::placeholder {
   color: #5a7fa3;
 }

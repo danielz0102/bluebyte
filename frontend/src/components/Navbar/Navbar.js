@@ -1,6 +1,7 @@
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import SearchBar from "../SearchBar";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Navbar() {
       <img src="/bluebyte-logo.png" alt="Bluebyte Logo" className="logo-img" />
 
       <div className="navbar-center">
-        <input type="text" placeholder="Buscar" className="search-bar" />
+        <SearchBar />
       </div>
 
       <div className="user-profile">
