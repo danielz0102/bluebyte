@@ -94,6 +94,13 @@ ORDER BY COALESCE(p.updatedAt, p.publishedAt) DESC;
 
 DELIMITER //
 
+DROP PROCEDURE IF EXISTS getPostsByTitle //
+CREATE PROCEDURE getPostsByTitle(IN p_title VARCHAR(255))
+BEGIN
+	SELECT * FROM posts_vw
+    WHERE title LIKE CONCAT('%', p_title, '%');
+END //
+
 CREATE PROCEDURE login(
 	IN p_username VARCHAR(50),
     IN p_password VARCHAR(50)
