@@ -1,29 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainLayout from "../components/MainLayout";
+import { useParams } from "react-router-dom";
 import "./PostDetailPage.css";
-
-const mockPost = {
-  id: 1,
-  title: "Primer Post de ejemplo",
-  author: "Usuario",
-  date: "2025-09-20",
-  content:
-    "Este es un contenido de ejemplo para la pantalla de Publicaciones y comentarios. Aquí podrán ver el post y comentar.",
-};
+import axios from "axios";
+import { useComments } from "../hooks/useComments";
 
 export default function PostDetailPage() {
-  const [comments, setComments] = useState([
-    { id: 1, user: "Ana", text: "¡Excelente publicación!" },
-    { id: 2, user: "Luis", text: "Gracias por compartir." },
-  ]);
+  const { id } = useParams();
+  const { comments, postComment } = useComments(id);
+
+  const [post, setPost] = useState(null);
   const [text, setText] = useState("");
+
+  const getPost = async (postId) => {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3001/publicaciones/${postId}`
+      );
+
+      setPost(data);
+    } catch (err) {
+      console.error("Error al cargar la publicación:", err);
+      alert("Error al cargar la publicación");
+    }
+  };
+
+  useEffect(() => {
+    getPost(id);
+  }, [id]);
 
   const addComment = (e) => {
     e.preventDefault();
     const t = text.trim();
     if (!t) return;
-    setComments([...comments, { id: Date.now(), user: "Tú", text: t }]);
     setText("");
+    postComment(t);
   };
 
   return (
@@ -35,14 +46,19 @@ export default function PostDetailPage() {
           </div>
 
           <article className="card post-card">
-            <h2>{mockPost.title}</h2>
+            <h2>{post?.title ?? "Cargando..."}</h2>
             <div className="meta">
               <span>
-                por <b>{mockPost.author}</b>
+                por <b>{post?.username}</b>
               </span>
-              <span>{mockPost.date}</span>
+              <span>{new Date(post?.publishedAt).toLocaleDateString()}</span>
             </div>
-            <p className="content">{mockPost.content}</p>
+            <img
+              src={post?.image ? `data:image/jpeg;base64,${post.image}` : ""}
+              alt={post?.title}
+              style={{ maxWidth: "600px" }}
+            />
+            <p className="content">{post?.content}</p>
           </article>
 
           <section className="card comments-card">
@@ -50,7 +66,7 @@ export default function PostDetailPage() {
             <ul className="comment-list">
               {comments.map((c) => (
                 <li key={c.id}>
-                  <b>{c.user}:</b> <span>{c.text}</span>
+                  <b>{c.username}:</b> <span>{c.content}</span>
                 </li>
               ))}
             </ul>

@@ -33,12 +33,12 @@ const file = multer({
 });
 
 app.post("/registrar", file.single("image"), (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
   const imagen = req.file.buffer.toString("base64");
 
   db.query(
-    "CALL registerUser(?,?,?)",
-    [username, password, imagen],
+    "CALL registerUser(?,?,?,?)",
+    [username, password, email, imagen],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -53,10 +53,7 @@ app.post("/registrar", file.single("image"), (req, res) => {
 
       res.status(201).json({
         message: "Usuario registrado",
-        user: {
-          id: userData.id,
-          username: userData.username,
-        },
+        user: userData,
       });
     }
   );
@@ -79,15 +76,11 @@ app.post("/login", (req, res) => {
 
     return res.json({
       message: "Login exitoso",
-      user: {
-        id: userData.id,
-        username: userData.username,
-      },
+      user: userData,
     });
   });
 });
-<<<<<<< Updated upstream
-=======
+
 
 app.get("/publicaciones", (req, res) => {
   const { userId, title } = req.query;
@@ -154,6 +147,7 @@ app.post("/publicaciones", file.single("image"), (req, res) => {
       }
 
       const postData = result[0][0];
+
       // Insertar notificación
       db.query(
         "INSERT INTO notifications (message, userId) VALUES (?, ?)",
@@ -167,6 +161,12 @@ app.post("/publicaciones", file.single("image"), (req, res) => {
           res.status(201).json({ message: "Publicación creada", post: postData });
         }
       );
+    }
+  );
+});
+
+
+      res.status(201).json({ message: "Publicación creada", post: postData });
     }
   );
 });
@@ -313,6 +313,7 @@ app.post("/comments", (req, res) => {
         return res.status(500).json({ message: "Error en la base de datos" });
       }
 
+
       // Obtener autor del post
       db.query("SELECT userId FROM posts WHERE id = ?", [postId], (postErr, postResult) => {
         if (postErr || postResult.length === 0) {
@@ -358,6 +359,11 @@ app.post("/comments", (req, res) => {
           });
         });
       });
+
+      res
+        .status(201)
+        .json({ message: "Comentario agregado", commentId: result.insertId });
+
     }
   );
 });
@@ -385,6 +391,7 @@ app.put("/usuarios/:id", file.single("image"), (req, res) => {
     }
   );
 });
+
 
 app.get("/notifications/:userId", (req, res) => {
   const { userId } = req.params;
@@ -419,4 +426,3 @@ app.put("/notifications/:id/seen", (req, res) => {
     }
   );
 });
->>>>>>> Stashed changes

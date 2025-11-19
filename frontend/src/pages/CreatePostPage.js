@@ -8,8 +8,17 @@ export default function CreatePostPage() {
   const navigate = useNavigate();
 
   const handleCreate = async (postData) => {
+    const formData = new FormData();
+    formData.append("title", postData.title);
+    formData.append("content", postData.content);
+    formData.append("userId", postData.userId);
+    formData.append("categoryId", postData.category);
+    formData.append("image", postData.image);
+
     try {
-      await axios.post("http://localhost:3001/posts", postData);
+      await axios.post("http://localhost:3001/publicaciones", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("Publicación creada con éxito!");
       navigate("/home");
     } catch (err) {

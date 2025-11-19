@@ -4,10 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Alert from "../components/Alert/Alert";
 
-const skipBackend = true; // Cambia a false cuando quieras volver a usar el backend
-
 function LoginPage() {
-  
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,44 +13,55 @@ function LoginPage() {
     localStorage.removeItem("user");
   }, []);
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validate()) return;
+    if (!validate()) return;
 
-  if (skipBackend) {
-    // Simula login exitoso sin backend
-    const fakeUser = { username, role: "user" };
-    localStorage.setItem("user", JSON.stringify(fakeUser));
-    navigate("/home");
-    return; // ← Este return es importante para evitar que siga al bloque real
-  }
+    try {
+      const { data } = await axios.post("http://localhost:3001/login", {
+        username,
+        password,
+      });
 
-  try {
-    const { data } = await axios.post("http://localhost:3001/login", {
-      username,
-      password,
-    });
+      console.log({ user: data.user });
 
-    localStorage.setItem("user", JSON.stringify(data.user));
-    navigate("/home");
-  } catch (err) {
-    console.log(err);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
 
-    if (err.response?.status === 401) {
-      return setError(
-        "Credenciales inválidas. Por favor, verifica tu información."
+      if (err.response?.status === 401) {
+        return setError(
+          "Credenciales inválidas. Por favor, verifica tu información."
+        );
+      }
+
+      setError(
+        "Ha habido un error en el servidor. Inténtalo de nuevo más tarde."
       );
     }
-
-    setError(
-      "Ha habido un error en el servidor. Inténtalo de nuevo más tarde."
-    );
-  }
-};
+  };
 
   const validate = () => {
-    if (!username || !password) {
+    const user = (username || "").trim();
+    const pass = (password || "").trim();
+    const usernameRe = /^[a-zA-Z0-9_.-]{3,20}$/;
+    const passwordRe = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\S]{8,}$/;
+
+    if (!user || !pass) {
       setError("Llene los campos faltantes");
+      return false;
+    }
+    if (!usernameRe.test(user)) {
+      setError(
+        "Usuario inválido: usa 3-20 caracteres alfanuméricos (._-), sin espacios."
+      );
+      return false;
+    }
+    if (!passwordRe.test(pass)) {
+      setError(
+        "Contraseña inválida: mínimo 8, al menos 1 número y 1 carácter especial, sin espacios."
+      );
       return false;
     }
 
