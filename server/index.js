@@ -81,6 +81,7 @@ app.post("/login", (req, res) => {
   });
 });
 
+
 app.get("/publicaciones", (req, res) => {
   const { userId, title } = req.query;
 
@@ -146,10 +147,30 @@ app.post("/publicaciones", file.single("image"), (req, res) => {
       }
 
       const postData = result[0][0];
+
+      // Insertar notificación
+      db.query(
+        "INSERT INTO notifications (message, userId) VALUES (?, ?)",
+        [`Publicaste: "${title}"`, userId],
+        (notifErr) => {
+          if (notifErr) {
+            console.error("Error al insertar notificación:", notifErr);
+            // No detenemos el flujo por esto
+          }
+
+          res.status(201).json({ message: "Publicación creada", post: postData });
+        }
+      );
+    }
+  );
+});
+
+
       res.status(201).json({ message: "Publicación creada", post: postData });
     }
   );
 });
+
 
 app.put("/publicaciones/:id", file.single("image"), (req, res) => {
   const postId = req.params.id;
@@ -292,9 +313,57 @@ app.post("/comments", (req, res) => {
         return res.status(500).json({ message: "Error en la base de datos" });
       }
 
+
+      // Obtener autor del post
+      db.query("SELECT userId FROM posts WHERE id = ?", [postId], (postErr, postResult) => {
+        if (postErr || postResult.length === 0) {
+          console.error("Error al obtener autor del post:", postErr);
+          return res.status(500).json({ message: "Error al generar notificación" });
+        }
+
+        const postOwnerId = postResult[0].userId;
+
+        // Obtener username del comentador
+        db.query("SELECT username FROM users WHERE id = ?", [userId], (userErr, userResult) => {
+          const username = userResult[0]?.username || "Alguien";
+
+          // Si el comentador NO es el autor del post → notificar al autor
+          if (userId !== postOwnerId) {
+            db.query(
+              "INSERT INTO notifications (message, userId) VALUES (?, ?)",
+              [`${username} comentó tu publicación`, postOwnerId]
+            );
+          } else {
+            // Si el autor responde → notificar al comentador original
+            // (ejemplo: último comentario en ese post)
+            db.query(
+              "SELECT userId FROM comments WHERE postId = ? ORDER BY createdAt DESC LIMIT 1",
+              [postId],
+              (cErr, cResult) => {
+                if (!cErr && cResult.length > 0) {
+                  const originalCommenterId = cResult[0].userId;
+                  if (originalCommenterId !== postOwnerId) {
+                    db.query(
+                      "INSERT INTO notifications (message, userId) VALUES (?, ?)",
+                      [`${username} respondió tu comentario`, originalCommenterId]
+                    );
+                  }
+                }
+              }
+            );
+          }
+
+          res.status(201).json({
+            message: "Comentario agregado",
+            commentId: result.insertId,
+          });
+        });
+      });
+
       res
         .status(201)
         .json({ message: "Comentario agregado", commentId: result.insertId });
+
     }
   );
 });
@@ -319,6 +388,41 @@ app.put("/usuarios/:id", file.single("image"), (req, res) => {
       res
         .status(200)
         .json({ message: "Usuario actualizado", user: result[0][0] });
+    }
+  );
+});
+
+
+app.get("/notifications/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  db.query(
+    "SELECT id, message, seen FROM notifications WHERE userId = ? ORDER BY id DESC",
+    [userId],
+    (err, result) => {
+      if (err) {
+        console.error("Error al obtener notificaciones:", err);
+        return res.status(500).json({ message: "Error en la base de datos" });
+      }
+
+      res.json(result);
+    }
+  );
+});
+
+app.put("/notifications/:id/seen", (req, res) => {
+  const { id } = req.params;
+
+  db.query(
+    "UPDATE notifications SET seen = TRUE WHERE id = ?",
+    [id],
+    (err) => {
+      if (err) {
+        console.error("Error al actualizar notificación:", err);
+        return res.status(500).json({ message: "Error en la base de datos" });
+      }
+
+      res.json({ success: true });
     }
   );
 });
