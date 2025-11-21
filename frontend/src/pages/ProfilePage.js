@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../components/MainLayout/";
 import Post from "../components/Post/Post";
 import { usePosts } from "../hooks/usePosts";
@@ -191,6 +191,19 @@ function UserPosts() {
   const { id } = useParams();
   const [showPosts, setShowPosts] = useState(false);
   const { posts } = usePosts({ userId: id });
+  const navigate = useNavigate();
+
+  const deletePost = async (postId) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta publicación?")) {
+      try {
+        await axios.delete(`http://localhost:3001/publicaciones/${postId}`);
+        navigate(0);
+      } catch (error) {
+        console.error("Error al eliminar la publicación:", error);
+        alert("Error al eliminar la publicación. Intenta de nuevo.");
+      }
+    }
+  }
 
   return (
     <section className="ProfilePage-user-posts">
@@ -208,6 +221,14 @@ function UserPosts() {
               }}>
                 Editar Publicación
               </Link>
+              <button className="toggle-comments-btn" style={{
+                textDecoration: 'none',
+                backgroundColor: 'red'
+              }}
+              onClick={() => deletePost(post.id)}
+              >
+                Eliminar Publicación
+              </button>
             </>
           ))}
         </main>
