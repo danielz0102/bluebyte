@@ -165,13 +165,6 @@ app.post("/publicaciones", file.single("image"), (req, res) => {
   );
 });
 
-
-      res.status(201).json({ message: "Publicación creada", post: postData });
-    }
-  );
-});
-
-
 app.put("/publicaciones/:id", file.single("image"), (req, res) => {
   const postId = req.params.id;
   const { title, content } = req.body;
@@ -313,7 +306,6 @@ app.post("/comments", (req, res) => {
         return res.status(500).json({ message: "Error en la base de datos" });
       }
 
-
       // Obtener autor del post
       db.query("SELECT userId FROM posts WHERE id = ?", [postId], (postErr, postResult) => {
         if (postErr || postResult.length === 0) {
@@ -359,11 +351,6 @@ app.post("/comments", (req, res) => {
           });
         });
       });
-
-      res
-        .status(201)
-        .json({ message: "Comentario agregado", commentId: result.insertId });
-
     }
   );
 });

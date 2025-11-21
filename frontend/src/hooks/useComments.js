@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 export function useComments(postId) {
   const [comments, setComments] = useState([]);
 
-
   // Cargar comentarios de un post
   const fetchComments = async () => {
     if (!postId) {
@@ -13,19 +12,11 @@ export function useComments(postId) {
     }
     try {
       const { data } = await axios.get(`http://localhost:3001/comments?postId=${postId}`);
-=======
-  const fetchComments = async (postId) => {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3001/comments?postId=${postId}`
-      );
-
       setComments(data);
     } catch (err) {
       console.error("Error al cargar comentarios:", err);
     }
   };
-
 
   const postComment = async (content) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -53,11 +44,3 @@ export function useComments(postId) {
 
   return { comments, postComment };
 }
-=======
-  useEffect(() => {
-    fetchComments(postId);
-  }, [postId]);
-
-  return { comments, postComment };
-}
-
