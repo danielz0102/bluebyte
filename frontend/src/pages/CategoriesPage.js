@@ -19,7 +19,7 @@ export default function CategoriesPage() {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:3001/categorias`);
+      const { data } = await axios.get(`http://localhost:3001/categorias/${user.id}`);
       setCategories(data);
       setError("");
     } catch (err) {
@@ -27,7 +27,7 @@ export default function CategoriesPage() {
       setError("No se pudieron cargar las categorías");
     }
   };
-
+  
   useEffect(() => {
     fetchCategories();
   }, []);

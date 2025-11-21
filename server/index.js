@@ -203,80 +203,6 @@ app.delete("/publicaciones/:id", (req, res) => {
   });
 });
 
-app.get("/categorias", (req, res) => {
-  db.query("SELECT * FROM categories", (err, result) => {
-    if (err) return res.status(500).json({ message: "Error en DB" });
-    res.json(result);
-  });
-});
-
-app.post("/registrarCategorias", file.single("image"), (req, res) => {
-  const { title, description, userId } = req.body;
-  const image = req.file.buffer.toString("base64");
-
-  db.query(
-    "CALL registerCategory(?,?,?,?)",
-    [title, description, image, userId],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        if (err.sqlState === "45000")
-          return res.status(409).json({ message: "La categoría ya existe" });
-        return res.status(500).json({ message: "Error en DB" });
-      }
-      res
-        .status(201)
-        .json({ message: "Categoría registrada", category: result[0][0] });
-    }
-  );
-});
-app.get("/categorias/:userId", (req, res) => {
-  const { userId } = req.params;
-
-  db.query(
-    "SELECT * FROM categories WHERE userId = ?",
-    [userId],
-    (err, results) => {
-      if (err) {
-        console.error("Error al cargar categorías:", err);
-        return res.status(500).json({ error: "Error al cargar categorías" });
-      }
-      res.json(results);
-    }
-  );
-});
-
-app.put("/editar_categoria/:id", (req, res) => {
-  const { id } = req.params;
-  const { description } = req.body;
-  db.query(
-    "UPDATE categories SET description = ? WHERE id = ?",
-    [description, id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ success: false, error: err.sqlMessage });
-      }
-      if (result.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Categoría no encontrada" });
-      }
-      res.status(200).json({
-        success: true,
-        message: "Descripción actualizada correctamente",
-      });
-    }
-  );
-});
-
-app.delete("/eliminar_categoria/:id", (req, res) => {
-  const id = req.params.id;
-  db.query("DELETE FROM categories WHERE id = ?", [id], (err, result) => {
-    if (err) return res.status(500).json({ message: "Error al eliminar" });
-    res.json({ message: "Categoría eliminada" });
-  });
-});
-
 app.get("/comments", (req, res) => {
   const { postId } = req.query;
 
@@ -425,3 +351,98 @@ app.delete("/user/:id", (req, res) => {
     res.json({ message: "Usuario eliminado correctamente" });
   })
 })
+
+//Cargar todas las categorías
+app.get("/categorias", (req, res) => {
+  db.query("SELECT * FROM categories", (err, result) => {
+    if (err) return res.status(500).json({ message: "Error en DB" });
+    res.json(result);
+  });
+});
+//Registrar categoría
+app.post("/registrarCategorias", file.single("image"), (req, res) => {
+  const { title, description, userId } = req.body;
+  const image = req.file.buffer.toString("base64");
+
+  db.query(
+    "CALL registerCategory(?,?,?,?)",
+    [title, description, image, userId],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        if (err.sqlState === "45000")
+          return res.status(409).json({ message: "La categoría ya existe" });
+        return res.status(500).json({ message: "Error en DB" });
+      }
+      res
+        .status(201)
+        .json({ message: "Categoría registrada", category: result[0][0] });
+    }
+  );
+});
+//Cargar categorías por usuario
+app.get("/categorias/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  db.query(
+    "SELECT * FROM categories WHERE userId = ?",
+    [userId],
+    (err, results) => {
+      if (err) {
+        console.error("Error al cargar categorías:", err);
+        return res.status(500).json({ error: "Error al cargar categorías" });
+      }
+      res.json(results);
+    }
+  );
+});
+//Editar categoría
+app.put("/editar_categoria/:id", (req, res) => {
+  const { id } = req.params;
+  const { description } = req.body;
+  db.query(
+    "UPDATE categories SET description = ? WHERE id = ?",
+    [description, id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ success: false, error: err.sqlMessage });
+      }
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Categoría no encontrada" });
+      }
+      res.status(200).json({
+        success: true,
+        message: "Descripción actualizada correctamente",
+      });
+    }
+  );
+});
+//Eliminar categoría
+app.delete("/eliminar_categoria/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("DELETE FROM categories WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ message: "Error al eliminar" });
+    res.json({ message: "Categoría eliminada" });
+  });
+});
+//Modal de post por categoría
+app.get("/categorias/:categoryId/posts", (req, res) => {
+  const { categoryId } = req.params;
+  db.query(
+    `SELECT p.id, p.title, p.content, p.image, p.publishedAt, u.username
+     FROM posts p
+     JOIN users u ON p.userId = u.id
+     JOIN posts_categories pc ON pc.postId = p.id
+     WHERE pc.categoryId = ?`,
+    [categoryId],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Error al obtener posts" });
+      }
+      res.json(result);
+    }
+  );
+});

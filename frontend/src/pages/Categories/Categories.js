@@ -10,6 +10,10 @@ function Categories() {
   const [categorias, setCategorias] = useState([]);
   const [error, setError] = useState("");
 
+  const [showModal, setShowModal] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   useEffect(() => {
     fetchCategorias();
   }, []);
@@ -21,6 +25,18 @@ function Categories() {
     } catch (err) {
       console.error("Error al cargar categorías:", err);
       setError("No se pudieron cargar las categorías");
+    }
+  };
+
+  const openCategory = async (catId) => {
+    try {
+      const { data } = await axios.get(`http://localhost:3001/categorias/${catId}/posts`);
+      setPosts(data);
+      setSelectedCategory(catId);
+      setShowModal(true);
+    } catch (err) {
+      console.error(err);
+      alert("Error al obtener publicaciones");
     }
   };
 
@@ -36,7 +52,11 @@ function Categories() {
       <div className="category-grid">
         {categorias.length > 0 ? (
           categorias.map((cat, i) => (
-            <div className="category-card" key={i}>
+            <div
+              className="category-card"
+              key={i}
+              onClick={() => openCategory(cat.id)} 
+            >
               <img
                 src={`data:image/jpeg;base64,${cat.image}`}
                 alt={cat.title}
@@ -50,6 +70,49 @@ function Categories() {
           <p>No hay categorías registradas</p>
         )}
       </div>
+
+      {}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="close-btn" onClick={() => setShowModal(false)}>X</button>
+
+            <h2>
+              Categoría: {categorias.find(c => c.id === selectedCategory)?.title || "Cargando..."}
+            </h2>
+
+            {posts.length === 0 ? (
+              <p>No hay publicaciones en esta categoría</p>
+            ) : (
+              posts.map(post => (
+                <div key={post.id} className="post-card">
+                  <h3>{post.title}</h3>
+                  <small>
+                    por <b>{post.username}</b> - {new Date(post.publishedAt).toLocaleDateString()}
+                  </small>
+
+                  <div className="post-image-container">
+                    <img
+                      src={`data:image/jpeg;base64,${post.image}`}
+                      alt={post.title}
+                      className="post-image"
+                    />
+                  </div>
+
+                  <p>{post.content}</p>
+
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => navigate(`/post/${post.id}`)}
+                  >
+                    Ver publicación completa
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </MainLayout>
   );
 }

@@ -25,6 +25,7 @@
 }
 .post-card h2 {
   margin: 0 0 8px;
+  color: black;
 }
 .meta {
   display: flex;
