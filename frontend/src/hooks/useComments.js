@@ -35,6 +35,8 @@ export function useComments(postId) {
         console.error("Error al enviar comentario:", err);
       }
     }
+
+    fetchComments();
   };
 
   // Efecto inicial: cargar comentarios cuando cambia el postId
