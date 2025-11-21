@@ -1,4 +1,4 @@
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import { useEffect, useState } from "react";
 
 export function useComments(postId) {
@@ -11,7 +11,7 @@ export function useComments(postId) {
       return;
     }
     try {
-      const { data } = await axios.get(`http://localhost:3001/comments?postId=${postId}`);
+      const { data } = await httpClient.get(`/comments?postId=${postId}`);
       setComments(data);
     } catch (err) {
       console.error("Error al cargar comentarios:", err);
@@ -29,7 +29,7 @@ export function useComments(postId) {
       };
 
       try {
-        await axios.post("http://localhost:3001/comments", nuevo);
+        await httpClient.post("/comments", nuevo);
 
       } catch (err) {
         console.error("Error al enviar comentario:", err);

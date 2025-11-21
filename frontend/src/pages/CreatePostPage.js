@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import PostForm from "../components/PostForm/PostForm";
 import "./CreatePostPage.css";
-import axios from "axios";
+import { httpClient } from "../httpClient";
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function CreatePostPage() {
     formData.append("image", postData.image);
 
     try {
-      await axios.post("http://localhost:3001/publicaciones", formData, {
+      await httpClient.post("/publicaciones", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Publicación creada con éxito!");

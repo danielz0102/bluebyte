@@ -1,6 +1,6 @@
 import "./LoginPage.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import { useState, useEffect } from "react";
 import Alert from "../components/Alert/Alert";
 
@@ -18,7 +18,7 @@ function LoginPage() {
     if (!validate()) return;
 
     try {
-      const { data } = await axios.post("http://localhost:3001/login", {
+      const { data } = await httpClient.post("/login", {
         username,
         password,
       });

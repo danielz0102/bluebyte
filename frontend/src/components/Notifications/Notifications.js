@@ -1,6 +1,6 @@
 import './Notifications.css';
 import { useNotifications } from "../../hooks/useNotifications";
-import axios from "axios";
+import { httpClient } from "../../httpClient";
 
 
 function Notifications() {
@@ -8,7 +8,7 @@ function Notifications() {
   const { notifications, loading, setNotifications } = useNotifications(user?.id);
 
   const markAsRead = async (id) => {
-    await axios.put(`http://localhost:3001/notifications/${id}/seen`);
+    await httpClient.put(`/notifications/${id}/seen`);
     setNotifications(prev =>
       prev.map(n => n.id === id ? { ...n, seen: true } : n)
     );

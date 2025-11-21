@@ -1,7 +1,7 @@
 import "./CategoriesPage.css";
 import MainLayout from "../components/MainLayout";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import Alert from "../components/Alert/Alert";
 
 export default function CategoriesPage() {
@@ -19,7 +19,7 @@ export default function CategoriesPage() {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:3001/categorias/${user.id}`);
+      const { data } = await httpClient.get(`/categorias/${user.id}`);
       setCategories(data);
       setError("");
     } catch (err) {
@@ -43,7 +43,7 @@ export default function CategoriesPage() {
     formData.append("userId", user.id);
 
     try {
-      await axios.post("http://localhost:3001/registrarCategorias", formData, {
+      await httpClient.post("/registrarCategorias", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -90,7 +90,7 @@ export default function CategoriesPage() {
   const removeCategory = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar esta categoría?")) return;
     try {
-      await axios.delete(`http://localhost:3001/eliminar_categoria/${id}`);
+      await httpClient.delete(`/eliminar_categoria/${id}`);
       fetchCategories();
     } catch (err) {
       console.error("Error al eliminar:", err);
@@ -115,8 +115,8 @@ export default function CategoriesPage() {
     }
 
     try {
-      const response = await axios.put(
-        `http://localhost:3001/editar_categoria/${id}`,
+      const response = await httpClient.put(
+        `/editar_categoria/${id}`,
         {
           description: editedDesc,
         }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MainLayout from "../components/MainLayout";
 import { useParams } from "react-router-dom";
 import "./PostDetailPage.css";
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import { useComments } from "../hooks/useComments";
 
 export default function PostDetailPage() {
@@ -14,8 +14,8 @@ export default function PostDetailPage() {
 
   const getPost = async (postId) => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:3001/publicaciones/${postId}`
+      const { data } = await httpClient.get(
+        `/publicaciones/${postId}`
       );
 
       setPost(data);

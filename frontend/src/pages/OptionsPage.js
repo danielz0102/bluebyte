@@ -1,7 +1,7 @@
 import MainLayout from "../components/MainLayout/";
 import "./OptionsPage.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { httpClient } from "../httpClient";
 
 export default function OptionsPage() {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function OptionsPage() {
 
     const ok = window.confirm("¿Seguro que deseas borrar tu cuenta?");
     if (ok) {
-      axios.delete(`http://localhost:3001/user/${userId}`).catch((err) => {
+      httpClient.delete(`/user/${userId}`).catch((err) => {
         console.error("Error al borrar la cuenta:", err);
       });
 

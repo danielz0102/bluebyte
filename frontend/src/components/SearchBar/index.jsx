@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SearchBar.css";
-import axios from "axios";
+import { httpClient } from "../../httpClient";
 
 export default function SearchBar() {
   const [posts, setPosts] = useState([]);
@@ -15,8 +15,8 @@ export default function SearchBar() {
     }
 
     try {
-      const { data } = await axios.get(
-        `http://localhost:3001/publicaciones?title=${query}`
+      const { data } = await httpClient.get(
+        `/publicaciones?title=${query}`
       );
       setPosts(data);
     } catch (err) {

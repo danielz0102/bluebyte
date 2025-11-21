@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
 import "../CreatePostPage.css";
-import axios from "axios";
+import { httpClient } from "../../httpClient";
 import { useEffect, useState } from "react";
 import EditPostForm from "./EditPostForm";
 
@@ -18,7 +18,7 @@ export default function EditPostPage() {
     formData.append("image", postData.image);
 
     try {
-      await axios.put(`http://localhost:3001/publicaciones/${id}`, formData, {
+      await httpClient.put(`/publicaciones/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       navigate(`/post/${id}`);
@@ -30,7 +30,7 @@ export default function EditPostPage() {
 
   const getPostData = async (postId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/publicaciones/${postId}`);
+      const response = await httpClient.get(`/publicaciones/${postId}`);
       setPostData(response.data);
     } catch (err) {
       console.error("Error al obtener los datos de la publicación:", err);

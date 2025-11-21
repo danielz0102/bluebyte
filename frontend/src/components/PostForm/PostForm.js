@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./PostForm.css";
-import axios from "axios";
+import { httpClient } from "../../httpClient";
 
 export default function PostForm({ initialData = {}, onSubmit }) {
   const [title, setTitle] = useState(initialData.title || "");
@@ -33,7 +33,7 @@ export default function PostForm({ initialData = {}, onSubmit }) {
   };
 
   const getCategories = async () => {
-    const { data } = await axios.get("http://localhost:3001/categorias");
+    const { data } = await httpClient.get("/categorias");
 
     if (data.length === 0) {
       alert("No hay categorías disponibles. Crea una categoría primero.");

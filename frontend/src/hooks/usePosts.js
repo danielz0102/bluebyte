@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { httpClient } from "../httpClient";
 
 export function usePosts({ userId, title } = {}) {
   const [posts, setPosts] = useState([]);
@@ -13,8 +13,8 @@ export function usePosts({ userId, title } = {}) {
     if (title) queryParams.append("title", title);
 
     try {
-      const { data } = await axios.get(
-        `http://localhost:3001/publicaciones?${queryParams.toString()}`
+      const { data } = await httpClient.get(
+        `/publicaciones?${queryParams.toString()}`
       );
       setPosts(data);
     } catch (err) {

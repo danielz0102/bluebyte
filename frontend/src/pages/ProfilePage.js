@@ -1,4 +1,4 @@
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -40,8 +40,8 @@ export default function ProfilePage() {
     }
 
     try {
-      const { data } = await axios.put(
-        `http://localhost:3001/usuarios/${user.id}`,
+      const { data } = await httpClient.put(
+        `/usuarios/${user.id}`,
         formData
       );
 
@@ -196,7 +196,7 @@ function UserPosts() {
   const deletePost = async (postId) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar esta publicación?")) {
       try {
-        await axios.delete(`http://localhost:3001/publicaciones/${postId}`);
+        await httpClient.delete(`/publicaciones/${postId}`);
         navigate(0);
       } catch (error) {
         console.error("Error al eliminar la publicación:", error);

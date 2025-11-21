@@ -1,7 +1,7 @@
 import "./RegisterPage.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import Alert from "../components/Alert/Alert";
 import { Link } from "react-router-dom";
 
@@ -29,8 +29,8 @@ function RegisterPage() {
     formData.append("image", imageFile);
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:3001/registrar",
+      const { data } = await httpClient.post(
+        "/registrar",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

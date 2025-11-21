@@ -1,7 +1,7 @@
 import MainLayout from "../../components/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { httpClient } from "../../httpClient";
 import "./Categories.css";
 
 function Categories() {
@@ -20,7 +20,7 @@ function Categories() {
 
   const fetchCategorias = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3001/categorias");
+      const { data } = await httpClient.get("/categorias");
       setCategorias(data);
     } catch (err) {
       console.error("Error al cargar categorías:", err);
@@ -30,7 +30,7 @@ function Categories() {
 
   const openCategory = async (catId) => {
     try {
-      const { data } = await axios.get(`http://localhost:3001/categorias/${catId}/posts`);
+      const { data } = await httpClient.get(`/categorias/${catId}/posts`);
       setPosts(data);
       setSelectedCategory(catId);
       setShowModal(true);

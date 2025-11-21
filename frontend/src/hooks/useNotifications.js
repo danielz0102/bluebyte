@@ -1,4 +1,4 @@
-import axios from "axios";
+import { httpClient } from "../httpClient";
 import { useEffect, useState } from "react";
 
 export function useNotifications(userId) {
@@ -13,7 +13,7 @@ export function useNotifications(userId) {
     }
 
     try {
-      const { data } = await axios.get(`http://localhost:3001/notifications/${userId}`);
+      const { data } = await httpClient.get(`/notifications/${userId}`);
       setNotifications(data);
     } catch (err) {
       console.error("Error al cargar notificaciones:", err);
