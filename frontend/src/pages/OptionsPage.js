@@ -1,6 +1,7 @@
 import MainLayout from "../components/MainLayout/";
 import "./OptionsPage.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function OptionsPage() {
   const navigate = useNavigate();
@@ -10,12 +11,17 @@ export default function OptionsPage() {
     navigate("/");
   };
 
-  const handleDeleteAccount = () => {
-    const ok = window.confirm(
-      "¿Seguro que deseas borrar tu cuenta? (Acción de backend pendiente)"
-    );
+  const handleDeleteAccount = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.id;
+
+    const ok = window.confirm("¿Seguro que deseas borrar tu cuenta?");
     if (ok) {
-      alert("Tu solicitud de borrado se registró (simulada).");
+      axios.delete(`http://localhost:3001/user/${userId}`).catch((err) => {
+        console.error("Error al borrar la cuenta:", err);
+      });
+
+      localStorage.removeItem("user");
       navigate("/");
     }
   };

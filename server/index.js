@@ -43,7 +43,7 @@ app.post("/registrar", file.single("image"), (req, res) => {
       if (err) {
         console.log(err);
         if (err.sqlState === "45000") {
-          return res.status(409).json({ message: "Username already exists" });
+          return res.status(409).json({ message: "Usuario ya existe" });
         }
 
         return res.status(500).json({ message: "ErrBD" });
@@ -367,7 +367,7 @@ app.put("/usuarios/:id", file.single("image"), (req, res) => {
       if (err) {
         console.log(err);
         if (err.sqlState === "45000") {
-          return res.status(409).json({ message: "Username already exists" });
+          return res.status(409).json({ message: "Usuario ya existe" });
         }
         return res.status(500).json({ message: "Error en DB" });
       }
@@ -413,3 +413,15 @@ app.put("/notifications/:id/seen", (req, res) => {
     }
   );
 });
+
+app.delete("/user/:id", (req, res) => {
+  const userId = req.params.id;
+  db.query("CALL deleteUser(?)", [userId], (err) => {
+    if (err) {
+      console.error("Error al eliminar usuario:", err);
+      return res.status(500).json({ message: "Error en la base de datos" });
+    }
+
+    res.json({ message: "Usuario eliminado correctamente" });
+  })
+})
