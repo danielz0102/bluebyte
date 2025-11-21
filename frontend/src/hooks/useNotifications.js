@@ -24,6 +24,13 @@ export function useNotifications(userId) {
 
   useEffect(() => {
     getNotifications();
+
+    const intervalId = setInterval(() => {
+      console.log('Refrescando notificaciones...');
+      getNotifications();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, [userId]);
 
   return { notifications, loading, setNotifications };
