@@ -126,7 +126,7 @@ export default function ProfilePage() {
                     type="text"
                     placeholder="Tu nombre"
                     disabled={!enabled}
-                    defaultValue={user.fullname}
+                    defaultValue={user.fullname || ""}
                     onChange={(e) => setFullname(e.target.value.trim())}
                   />
                 </div>

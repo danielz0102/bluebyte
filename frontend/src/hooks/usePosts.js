@@ -12,10 +12,6 @@ export function usePosts({ userId, title } = {}) {
     if (userId) queryParams.append("userId", userId);
     if (title) queryParams.append("title", title);
 
-    if (userId) {
-      queryParams.append("userId", userId);
-    }
-
     try {
       const { data } = await axios.get(
         `http://localhost:3001/publicaciones?${queryParams.toString()}`
