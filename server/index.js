@@ -12,11 +12,11 @@ app.listen(3001, () => {
 });
 
 const db = msyql2.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "my_sqlz",
-  database: "bluebyte",
-  port: 3306,
+  host: process.env.MYSQL_ADDON_HOST || "localhost",
+  user: process.env.MYSQL_ADDON_USER || "root",
+  password: process.env.MYSQL_ADDON_PASSWORD || "my_sqlz",
+  database: process.env.MYSQL_ADDON_DB || "bluebyte",
+  port: process.env.MYSQL_ADDON_PORT || 3306,
 });
 
 const file = multer({
