@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./PostForm.css";
-import axios from "axios";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import "../../components/PostForm/PostForm.css";
 
-export default function PostForm({ initialData = {}, onSubmit }) {
+export default function EditPostForm({ initialData = {}, onSubmit }) {
   const [title, setTitle] = useState(initialData.title || "");
-  const [category, setCategory] = useState(initialData.category || "General");
-  const [categories, setCategories] = useState([]);
   const [content, setContent] = useState(initialData.content || "");
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(initialData.image || null);
-  const navigate = useNavigate();
+  const [image, setImage] = useState(() => {});
+  const [previewUrl, setPreviewUrl] = useState(`data:image/jpeg;base64,${initialData.image}` || null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,34 +16,15 @@ export default function PostForm({ initialData = {}, onSubmit }) {
 
     const postData = {
       title,
-      category,
       content,
       image: image,
       userId: user.id,
       publishedAt: new Date().toISOString(),
-      isDraft: false,
       username: user.username,
     };
 
     onSubmit(postData);
   };
-
-  const getCategories = async () => {
-    const { data } = await axios.get("http://localhost:3001/categorias");
-
-    if (data.length === 0) {
-      alert("No hay categorías disponibles. Crea una categoría primero.");
-      navigate("/categorias/crear");
-      return;
-    }
-
-    setCategories(data);
-    setCategory(data[0].id);
-  };
-
-  useEffect(() => {
-    getCategories();
-  }, []);
 
   return (
     <form className="card form" onSubmit={handleSubmit}>
@@ -58,17 +35,6 @@ export default function PostForm({ initialData = {}, onSubmit }) {
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Escribe un título"
         />
-      </div>
-
-      <div className="form-row">
-        <label>Categoría</label>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.title}
-            </option>
-          ))}
-        </select>
       </div>
 
       <div className="form-row">
@@ -106,7 +72,7 @@ export default function PostForm({ initialData = {}, onSubmit }) {
 
       <div className="form-actions">
         <button className="btn btn-primary" type="submit">
-          Publicar
+          Editar
         </button>
         <Link to="/home" className="btn btn-secondary linklike">
           Cancelar

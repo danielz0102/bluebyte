@@ -8,6 +8,7 @@ import PostDetailPage from "./pages/PostDetailPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import OptionsPage from "./pages/OptionsPage";
+import EditPostPage from "./pages/EditPostPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/perfil/:id" element={<ProfilePage />} />
         <Route path="/post/:id" element={<PostDetailPage />} />
         <Route path="/nuevo-post" element={<CreatePostPage />} />
+        <Route path="/edit_post/:id" element={<EditPostPage />} />
         <Route path="/categorias/crear" element={<CategoriesPage />} />
         <Route path="/opciones" element={<OptionsPage />} />
       </Routes>

@@ -168,10 +168,10 @@ app.post("/publicaciones", file.single("image"), (req, res) => {
 app.put("/publicaciones/:id", file.single("image"), (req, res) => {
   const postId = req.params.id;
   const { title, content } = req.body;
-  const image = req.file.buffer.toString("base64");
+  const image = req.file ? req.file.buffer.toString("base64") : null;
 
   db.query(
-    "CALL updatePost(?,?,?,?,?)",
+    "CALL updatePost(?,?,?,?)",
     [postId, title, content, image],
     (err, result) => {
       if (err) {

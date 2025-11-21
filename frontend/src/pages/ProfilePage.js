@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import MainLayout from "../components/MainLayout/";
 import Post from "../components/Post/Post";
 import { usePosts } from "../hooks/usePosts";
@@ -194,14 +194,21 @@ function UserPosts() {
 
   return (
     <section className="ProfilePage-user-posts">
-      <h2 onClick={() => setShowPosts((prev) => !prev)}>
+      <h2 onClick={() => setShowPosts((prev) => !prev)} style={{color: '#000'}}>
         Mis Publicaciones {showPosts ? <ChevronDown /> : <ChevronRight />}
       </h2>
       {showPosts && (
         <main>
           {posts.length === 0 && <p>No has creado ninguna publicación aún.</p>}
           {posts.map((post) => (
-            <Post key={post.id} post={post} />
+            <>
+              <Post key={post.id} post={post} />
+              <Link to={`/edit_post/${post.id}`} className="toggle-comments-btn" style={{
+                textDecoration: 'none'
+              }}>
+                Editar Publicación
+              </Link>
+            </>
           ))}
         </main>
       )}
